@@ -1,9 +1,6 @@
 package com.brunoprojeto.anime_service.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,6 +27,11 @@ public class HeroController {
     private List<String>ListFilterHeroes(@RequestParam(defaultValue = "") List<String> names){
 
         return Heroes.stream().filter(names::contains).toList();
+    }
+    @GetMapping("{name}")
+    private String  FindByName(@PathVariable String name){
+
+        return Heroes.stream().filter(hero -> hero.equalsIgnoreCase(name)).findFirst().orElse("");
     }
 
 
