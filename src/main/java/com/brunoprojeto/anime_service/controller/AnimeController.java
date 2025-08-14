@@ -34,6 +34,8 @@ public class AnimeController {
                 (anime -> anime.getId().equals(id)).findFirst().orElse(null);
 
     }
+
+    @PostMapping
     public static Anime add (@RequestBody Anime animes){
 
         animes.setId(ThreadLocalRandom.current().nextLong(100_000));
