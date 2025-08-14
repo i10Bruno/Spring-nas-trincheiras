@@ -5,6 +5,7 @@ import com.brunoprojeto.anime_service.domain.Anime;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @RestController
 @RequestMapping("v1/animes")
@@ -32,6 +33,12 @@ public class AnimeController {
         return Anime.getAnimes().stream().filter
                 (anime -> anime.getId().equals(id)).findFirst().orElse(null);
 
+    }
+    public static Anime add (@RequestBody Anime animes){
+
+        animes.setId(ThreadLocalRandom.current().nextLong(100_000));
+         Anime.getAnimes().add(animes);
+         return animes;
     }
 
 
