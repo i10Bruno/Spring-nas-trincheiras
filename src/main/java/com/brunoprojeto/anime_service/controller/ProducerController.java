@@ -1,7 +1,10 @@
 package com.brunoprojeto.anime_service.controller;
 
 import com.brunoprojeto.anime_service.domain.Producer;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.function.ServerRequest;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -34,8 +37,8 @@ public class ProducerController {
 
     }
 
-    @PostMapping
-    public static Producer add (@RequestBody Producer producers){
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE,consumes =MediaType.APPLICATION_JSON_VALUE,headers = "x-api-key")
+    public static Producer add (@RequestBody Producer producers , @RequestHeader HttpHeaders headers){
 
         producers.setId(ThreadLocalRandom.current().nextLong(100_000));
          Producer.getProducers().add(producers);
