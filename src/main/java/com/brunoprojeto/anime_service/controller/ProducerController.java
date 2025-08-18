@@ -1,6 +1,7 @@
 package com.brunoprojeto.anime_service.controller;
 
 import com.brunoprojeto.anime_service.domain.Producer;
+import com.brunoprojeto.anime_service.mapper.ProducerMapper;
 import com.brunoprojeto.anime_service.request.ProducerPostRequest;
 import com.brunoprojeto.anime_service.response.ProducerGetResponse;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +18,8 @@ import java.util.concurrent.ThreadLocalRandom;
 @RestController
 @RequestMapping("v1/producer")
 public class ProducerController {
+
+    private static final ProducerMapper MAPPER = ProducerMapper.INSTANCE;
 
 
     @GetMapping
@@ -39,12 +42,8 @@ public class ProducerController {
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE,consumes =MediaType.APPLICATION_JSON_VALUE,headers = "x-api-key")
     public  ResponseEntity<ProducerGetResponse> add (@RequestBody ProducerPostRequest producerPostRequest, @RequestHeader HttpHeaders headers){
-       var producer= Producer.builder().id(ThreadLocalRandom.current().nextLong(100_000))
-                .name(producerPostRequest.getName())
-                .createdAt(LocalDateTime.now()).build();
-
-         Producer.getProducers().add(producer);
-        var response = ProducerGetResponse.builder().name(producer.getName()).id(producer.getId()).createdAt(producer.getCreatedAt()).build();
+       var producer= MAPPER.toProducer(producerPostRequest);
+        var response= MAPPER.toProducerGetResponse(producer);
 
          return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
