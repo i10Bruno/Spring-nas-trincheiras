@@ -14,22 +14,22 @@ public class HeroController {
 
     @GetMapping
 
-    private List<String>ListAllHeroes(){
+    public List<String>ListAllHeroes(){
 
         return Heroes;
     }
     @GetMapping("Filter")
-    private List<String>ListFilterHeroes(@RequestParam(defaultValue = "") String name){
+    public List<String>ListFilterHeroes(@RequestParam(defaultValue = "") String name){
 
         return Heroes.stream().filter(hero -> hero.equalsIgnoreCase(name)).toList();
     }
     @GetMapping("FilterList")
-    private List<String>ListFilterHeroes(@RequestParam(defaultValue = "") List<String> names){
+    public List<String>ListFilterHeroes(@RequestParam(defaultValue = "") List<String> names){
 
         return Heroes.stream().filter(names::contains).toList();
     }
     @GetMapping("{name}")
-    private String  FindByName(@PathVariable String name){
+    public String  FindByName(@PathVariable String name){
 
         return Heroes.stream().filter(hero -> hero.equalsIgnoreCase(name)).findFirst().orElse("");
     }

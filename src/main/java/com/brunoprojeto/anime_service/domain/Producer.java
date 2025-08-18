@@ -5,29 +5,27 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-@Getter
 @AllArgsConstructor
+@Getter
 @Setter
 public class Producer {
 
     @JsonProperty("full_name")
-    private  String name;
     private Long id;
+    private  String name;
+    private LocalDateTime createdAt;
+
 
     private static  List<Producer> producers = new ArrayList<>();
 
-    public Producer(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
 
     static {
-        var maapa = new Producer(1L, "maapa");
-        var kyotoAnimation = new Producer(2L, "kyoto animation");
-        var madhouse = new Producer(3L, "Madhouse");
+        var maapa = new Producer(1L, "maapa",LocalDateTime.now());
+        var kyotoAnimation = new Producer(2L, "kyoto animation",LocalDateTime.now());
+        var madhouse = new Producer(3L, "Madhouse",LocalDateTime.now());
         producers.addAll(List.of(maapa, kyotoAnimation, madhouse));
 
     }
@@ -36,6 +34,4 @@ public class Producer {
     public static List<Producer> getProducers() {
         return producers;
     }
-
-
 }

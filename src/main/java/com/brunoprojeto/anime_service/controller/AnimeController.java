@@ -12,14 +12,12 @@ import java.util.concurrent.ThreadLocalRandom;
 public class AnimeController {
 
     @GetMapping
-
-    public static List<Anime> ListAllHeroes(){
+    public  List<Anime> ListAllHeroes(){
 
         return Anime.getAnimes();
     }
-    @GetMapping
-
-    public static List<Anime> ListAllHeroes(@RequestParam(required = false) String name){
+    @GetMapping("nomes")
+    public  List<Anime> ListHeroes(@RequestParam(required = false) String name){
          var animes = Anime.getAnimes();
 
          if(name == null) return animes;
@@ -29,14 +27,14 @@ public class AnimeController {
     }
     @GetMapping("{id}")
 
-    public static Anime findByid (@PathVariable Long id){;
+    public  Anime findByid (@PathVariable Long id){;
         return Anime.getAnimes().stream().filter
                 (anime -> anime.getId().equals(id)).findFirst().orElse(null);
 
     }
 
     @PostMapping
-    public static Anime add (@RequestBody Anime animes){
+    public Anime add (@RequestBody Anime animes){
 
         animes.setId(ThreadLocalRandom.current().nextLong(100_000));
          Anime.getAnimes().add(animes);
