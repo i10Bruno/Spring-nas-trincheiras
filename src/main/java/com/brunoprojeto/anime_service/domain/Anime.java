@@ -1,13 +1,13 @@
 package com.brunoprojeto.anime_service.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.ArrayList;
 import java.util.List;
+@Builder
 @Getter
-@AllArgsConstructor
 @Setter
 public class Anime {
     private  String name;

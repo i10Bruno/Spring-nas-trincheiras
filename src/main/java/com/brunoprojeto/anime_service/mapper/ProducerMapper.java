@@ -7,6 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+@Mapper
 public interface ProducerMapper {
 
         ProducerMapper  INSTANCE= Mappers.getMapper(ProducerMapper.class);
@@ -17,7 +18,6 @@ public interface ProducerMapper {
 
 
     ProducerGetResponse toProducerGetResponse(Producer producer);
-
 
     }
 
