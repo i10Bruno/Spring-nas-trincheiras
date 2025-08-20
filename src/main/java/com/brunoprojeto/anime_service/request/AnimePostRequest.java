@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 public class AnimePostRequest {
     private String name;
-    private static List<Anime> animes = new ArrayList<>();
+
 
 
 }

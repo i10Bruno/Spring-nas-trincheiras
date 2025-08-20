@@ -3,9 +3,12 @@ package com.brunoprojeto.anime_service.controller;
 import com.brunoprojeto.anime_service.domain.Anime;
 import com.brunoprojeto.anime_service.mapper.AnimeMapper;
 import com.brunoprojeto.anime_service.mapper.ProducerMapper;
+import com.brunoprojeto.anime_service.request.AnimePostRequest;
 import com.brunoprojeto.anime_service.response.AnimeGetResponse;
+import com.brunoprojeto.anime_service.response.AnimePostResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.Mapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,9 +45,12 @@ public class AnimeController {
     }
 
     @PostMapping
-    public Anime save(@RequestBody Anime anime) {
-        anime.setId(ThreadLocalRandom.current().nextLong(100_000));
-        Anime.getAnimes().add(anime);
-        return anime;
+    public ResponseEntity<AnimePostResponse> save(@RequestBody AnimePostRequest animePostRequest) {
+        var animes = MAPPER.toAnimer(animePostRequest);
+
+        Anime.getAnimes().add(animes);
+        var response =MAPPER.toAnimePostResponse(animes);
+
+        return  ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
