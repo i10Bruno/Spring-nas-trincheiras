@@ -14,12 +14,22 @@ import java.util.List;
 
 @Mapper
 public interface AnimeMapper {
+
+
     AnimeMapper INSTANCE= Mappers.getMapper(AnimeMapper.class);
     @Mapping(target = "id", expression = "java(java.util.concurrent.ThreadLocalRandom.current().nextLong(100_000))")
+
+
+    //animepostrequest vira anime
     Anime toAnimer(AnimePostRequest animePostRequest);
+
+    //anime vira post response
     AnimePostResponse toAnimePostResponse(Anime anime);
 
+    //anime vira get response
     AnimeGetResponse toAnimeGetResponse(Anime anime);
+
+    //lista de anime vira lista de anime getresponse
     List<AnimeGetResponse> toAnimeGetResponseList(List<Anime> anime);
 
 }
