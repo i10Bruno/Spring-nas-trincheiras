@@ -8,6 +8,9 @@ import com.brunoprojeto.anime_service.response.AnimeGetResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+
+import java.util.List;
+
 @Mapper
 public interface AnimeMapper {
     AnimeMapper INSTANCE= Mappers.getMapper(AnimeMapper.class);
@@ -16,5 +19,6 @@ public interface AnimeMapper {
 
 
     AnimeGetResponse toAnimeGetResponse(Anime anime);
+    List<AnimeGetResponse> toAnimeGetResponseList(List<Anime> anime);
 
 }

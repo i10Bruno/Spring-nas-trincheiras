@@ -19,12 +19,18 @@ public class AnimeController {
 
     private static final AnimeMapper MAPPER =  AnimeMapper.INSTANCE;
     @GetMapping
-    public List<Anime> listAll(@RequestParam(required = false) String name) {
+    public ResponseEntity<List<AnimeGetResponse>> listAll(@RequestParam(required = false) String name) {
         var animes = Anime.getAnimes();
-        if (name == null) return animes;
+        var animeGetResponseList= MAPPER.toAnimeGetResponseList(animes);
 
-        return animes.stream().filter(anime -> anime.getName().equalsIgnoreCase(name)).toList();
+        if (name == null) return ResponseEntity.ok(animeGetResponseList);
+
+        var response =animeGetResponseList.stream().filter(anime -> anime.getName().equalsIgnoreCase(name)).toList();
+        return ResponseEntity.ok(response);
+
     }
+
+
 
     @GetMapping("/{id}")
     public ResponseEntity<AnimeGetResponse> findById(@PathVariable Long id) {
