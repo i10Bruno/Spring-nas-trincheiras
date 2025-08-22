@@ -25,7 +25,7 @@ public interface ProducerMapper {
 
     ProducerGetResponse toProducerGetResponse(Producer producer);
 
-    List<ProducerGetResponse> toProducerGetResponse(List<Producer> producer);
+    List<ProducerGetResponse> toProducerGetResponselist(List<Producer> producer);
 
 }
 

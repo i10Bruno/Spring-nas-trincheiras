@@ -26,7 +26,7 @@ public class ProducerController {
 
     public  ResponseEntity<List<ProducerGetResponse>>ListAllHeroes(@RequestParam(required = false) String name){
          var producers = Producer.getProducers();
-         var response = MAPPER.toProducerGetResponse(producers);
+         var response = MAPPER.toProducerGetResponselist(producers);
 
          if(name == null) return ResponseEntity.ok(response);
 
