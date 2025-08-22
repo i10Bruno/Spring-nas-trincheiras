@@ -53,4 +53,27 @@ public class AnimeController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+
+    @DeleteMapping("${id}")
+
+    public  ResponseEntity<Void> deletebyid (@PathVariable Long id){
+
+        var animeGetResponse = Anime.getAnimes().stream()
+                .filter(anime -> anime.getId().equals(id))
+                .findFirst().map(MAPPER::toAnimeGetResponse).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "anime not found"));
+
+
+
+        Anime.getAnimes().remove(animeGetResponse);
+        return ResponseEntity.noContent().build();
+
+
+
+    }
+
+
+
+
+
 }
