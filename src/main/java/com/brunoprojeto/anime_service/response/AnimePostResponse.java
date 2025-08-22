@@ -13,5 +13,4 @@ public class AnimePostResponse {
     private String name;
 
 
-
 }

@@ -16,5 +16,4 @@ public class ProducerGetResponse {
     private LocalDateTime createdAt;
 
 
-
 }

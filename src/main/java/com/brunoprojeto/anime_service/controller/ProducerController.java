@@ -9,11 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.function.ServerRequest;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 @RestController
 @RequestMapping("v1/producer")
@@ -24,33 +22,44 @@ public class ProducerController {
 
     @GetMapping
 
-    public  ResponseEntity<List<ProducerGetResponse>>ListAllHeroes(@RequestParam(required = false) String name){
-         var producers = Producer.getProducers();
-         var response = MAPPER.toProducerGetResponselist(producers);
+    public ResponseEntity<List<ProducerGetResponse>> ListAllHeroes(@RequestParam(required = false) String name) {
+        var producers = Producer.getProducers();
+        var response = MAPPER.toProducerGetResponselist(producers);
 
-         if(name == null) return ResponseEntity.ok(response);
+        if (name == null) return ResponseEntity.ok(response);
 
-         return ResponseEntity.ok(response.stream().filter(producer->producer.getName().equalsIgnoreCase(name)).toList());
+        return ResponseEntity.ok(response.stream().filter(producer -> producer.getName().equalsIgnoreCase(name)).toList());
 
     }
+
     @GetMapping("{id}")
 
-    public ResponseEntity<ProducerGetResponse> findByid (@PathVariable Long id){;
-        var producers =Producer.getProducers().stream().filter
-                (producer -> producer.getId().equals(id)).findFirst().orElse(null);
-
-        var response= MAPPER.toProducerGetResponse(producers);
+    public ResponseEntity<ProducerGetResponse> findByid(@PathVariable Long id) {
+        var producers = Producer.getProducers().stream().filter
+                (producer -> producer.getId().equals(id)).findFirst().map(MAPPER::toProducerGetResponse).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "producers not found"));
 
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(producers);
     }
 
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE,consumes =MediaType.APPLICATION_JSON_VALUE,headers = "x-api-key")
-    public  ResponseEntity<ProducerGetResponse> add (@RequestBody ProducerPostRequest producerPostRequest, @RequestHeader HttpHeaders headers){
-       var producer= MAPPER.toProducer(producerPostRequest);
-        var response= MAPPER.toProducerGetResponse(producer);
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "x-api-key")
+    public ResponseEntity<ProducerGetResponse> add(@RequestBody ProducerPostRequest producerPostRequest, @RequestHeader HttpHeaders headers) {
+        var producer = MAPPER.toProducer(producerPostRequest);
+        var response = MAPPER.toProducerGetResponse(producer);
 
-         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+
+    @DeleteMapping("{$id}")
+
+    public ResponseEntity<Void> DeleteById(@PathVariable Long id) {
+        var producerTodelete = Producer.getProducers().stream().filter
+                        (producer -> producer.getId().equals(id)).findFirst()
+                .map(MAPPER::toProducerGetResponse).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "producers not found"));
+        Producer.getProducers().remove(producerTodelete);
+
+        return ResponseEntity.noContent().build();
     }
 
 
