@@ -3,6 +3,7 @@ package com.brunoprojeto.anime_service.controller;
 import com.brunoprojeto.anime_service.domain.Producer;
 import com.brunoprojeto.anime_service.mapper.ProducerMapper;
 import com.brunoprojeto.anime_service.request.ProducerPostRequest;
+import com.brunoprojeto.anime_service.request.ProducerPutRequest;
 import com.brunoprojeto.anime_service.response.ProducerGetResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -58,6 +59,26 @@ public class ProducerController {
                         (producer -> producer.getId().equals(id)).findFirst()
                 .map(MAPPER::toProducerGetResponse).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "producers not found"));
         Producer.getProducers().remove(producerTodelete);
+
+        return ResponseEntity.noContent().build();
+    }
+
+
+
+    @PutMapping("{$id}")
+
+    public ResponseEntity<Void> updated(@PathVariable ProducerPutRequest request) {
+        var producerToupdate = Producer.getProducers().stream().filter
+                        (producer -> producer.getId().equals(request.getId())).findFirst()
+                .map(MAPPER::toProducerGetResponse).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "producers not found"));
+
+
+
+       var up =MAPPER.toProducerPutRequest(request ,producerToupdate.getCreatedAt());
+
+        Producer.getProducers().remove(producerToupdate);
+
+        Producer.getProducers().add(up);
 
         return ResponseEntity.noContent().build();
     }

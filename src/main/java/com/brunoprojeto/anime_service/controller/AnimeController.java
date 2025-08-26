@@ -83,7 +83,7 @@ public class AnimeController {
 
         var animeUpdate= MAPPER.toAnimer(request);
 
-        Anime.getAnimes().remove(animeUpdate);
+        Anime.getAnimes().remove(animeToRemove);
         Anime.getAnimes().add(animeUpdate);
         return ResponseEntity.noContent().build();
 
