@@ -2,6 +2,7 @@ package com.brunoprojeto.anime_service.mapper;
 
 import com.brunoprojeto.anime_service.domain.Anime;
 import com.brunoprojeto.anime_service.request.AnimePostRequest;
+import com.brunoprojeto.anime_service.request.AnimePutRequest;
 import com.brunoprojeto.anime_service.response.AnimeGetResponse;
 import com.brunoprojeto.anime_service.response.AnimePostResponse;
 import org.mapstruct.Mapper;
@@ -31,4 +32,5 @@ public interface AnimeMapper {
     //lista de anime vira lista de anime getresponse
     List<AnimeGetResponse> toAnimeGetResponseList(List<Anime> anime);
 
+    Anime toAnimer(AnimePutRequest request);
 }

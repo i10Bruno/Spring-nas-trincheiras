@@ -3,6 +3,7 @@ package com.brunoprojeto.anime_service.controller;
 import com.brunoprojeto.anime_service.domain.Anime;
 import com.brunoprojeto.anime_service.mapper.AnimeMapper;
 import com.brunoprojeto.anime_service.request.AnimePostRequest;
+import com.brunoprojeto.anime_service.request.AnimePutRequest;
 import com.brunoprojeto.anime_service.response.AnimeGetResponse;
 import com.brunoprojeto.anime_service.response.AnimePostResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -71,6 +72,25 @@ public class AnimeController {
 
 
     }
+
+    @PutMapping
+
+    public  ResponseEntity<Void> update (@PathVariable AnimePutRequest request){
+
+        var animeToRemove = Anime.getAnimes().stream()
+                .filter(anime -> anime.getId().equals(request.getId()))
+                .findFirst().map(MAPPER::toAnimeGetResponse).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "anime not found"));
+
+        var animeUpdate= MAPPER.toAnimer(request);
+
+        Anime.getAnimes().remove(animeUpdate);
+        Anime.getAnimes().add(animeUpdate);
+        return ResponseEntity.noContent().build();
+
+
+
+    }
+
 
 
 
