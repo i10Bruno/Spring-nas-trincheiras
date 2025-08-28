@@ -5,6 +5,7 @@ import com.brunoprojeto.anime_service.mapper.ProducerMapper;
 import com.brunoprojeto.anime_service.request.ProducerPostRequest;
 import com.brunoprojeto.anime_service.request.ProducerPutRequest;
 import com.brunoprojeto.anime_service.response.ProducerGetResponse;
+import com.brunoprojeto.anime_service.service.ProducerService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,32 +21,40 @@ public class ProducerController {
 
     private static final ProducerMapper MAPPER = ProducerMapper.INSTANCE;
 
+    private ProducerService producerService;
+
+
+    public ProducerController(){
+
+        this.producerService = new ProducerService();
+    }
+
 
     @GetMapping
 
-    public ResponseEntity<List<ProducerGetResponse>> ListAllHeroes(@RequestParam(required = false) String name) {
-        var producers = Producer.getProducers();
-        var response = MAPPER.toProducerGetResponselist(producers);
+    public ResponseEntity<List<ProducerGetResponse>> ListAll(@RequestParam(required = false) String name) {
+        var producers = producerService.findAll(name);
+        var ProducerGetresponse = MAPPER.toProducerGetResponselist(producers);
 
-        if (name == null) return ResponseEntity.ok(response);
-
-        return ResponseEntity.ok(response.stream().filter(producer -> producer.getName().equalsIgnoreCase(name)).toList());
+        return ResponseEntity.ok(ProducerGetresponse);
 
     }
 
     @GetMapping("{id}")
 
     public ResponseEntity<ProducerGetResponse> findByid(@PathVariable Long id) {
-        var producers = Producer.getProducers().stream().filter
-                (producer -> producer.getId().equals(id)).findFirst().map(MAPPER::toProducerGetResponse).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "producers not found"));
 
-
+       Producer producer= producerService.findById(id);
+       var producers = MAPPER.toProducerGetResponse(producer);
         return ResponseEntity.ok(producers);
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "x-api-key")
-    public ResponseEntity<ProducerGetResponse> add(@RequestBody ProducerPostRequest producerPostRequest, @RequestHeader HttpHeaders headers) {
+    public ResponseEntity<ProducerGetResponse> save(@RequestBody ProducerPostRequest producerPostRequest, @RequestHeader HttpHeaders headers) {
         var producer = MAPPER.toProducer(producerPostRequest);
+
+        var producerSaved = producerService.save(producer);
+
         var response = MAPPER.toProducerGetResponse(producer);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -55,11 +64,7 @@ public class ProducerController {
     @DeleteMapping("{$id}")
 
     public ResponseEntity<Void> DeleteById(@PathVariable Long id) {
-        var producerTodelete = Producer.getProducers().stream().filter
-                        (producer -> producer.getId().equals(id)).findFirst()
-                .map(MAPPER::toProducerGetResponse).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "producers not found"));
-        Producer.getProducers().remove(producerTodelete);
-
+        producerService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
@@ -68,17 +73,10 @@ public class ProducerController {
     @PutMapping("{$id}")
 
     public ResponseEntity<Void> updated(@PathVariable ProducerPutRequest request) {
-        var producerToupdate = Producer.getProducers().stream().filter
-                        (producer -> producer.getId().equals(request.getId())).findFirst()
-                .map(MAPPER::toProducerGetResponse).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "producers not found"));
 
+        var requested= MAPPER.toProducerPutRequest(request);
 
-
-       var up =MAPPER.toProducerPutRequest(request ,producerToupdate.getCreatedAt());
-
-        Producer.getProducers().remove(producerToupdate);
-
-        Producer.getProducers().add(up);
+        producerService.update(requested);
 
         return ResponseEntity.noContent().build();
     }
