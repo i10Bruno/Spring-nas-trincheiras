@@ -23,13 +23,11 @@ public List<Producer> findAll(String name){
     return name == null ? repository.findAll() : repository.findByName(name);
 
 
-
     }
 public Producer findById(Long id){
 
    return repository.findByid(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "producers not found"));
-
 
 }
 
