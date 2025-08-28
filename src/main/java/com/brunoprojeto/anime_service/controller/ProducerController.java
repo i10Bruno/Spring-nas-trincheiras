@@ -5,6 +5,7 @@ import com.brunoprojeto.anime_service.mapper.ProducerMapper;
 import com.brunoprojeto.anime_service.request.ProducerPostRequest;
 import com.brunoprojeto.anime_service.request.ProducerPutRequest;
 import com.brunoprojeto.anime_service.response.ProducerGetResponse;
+import com.brunoprojeto.anime_service.response.ProducerPostResponse;
 import com.brunoprojeto.anime_service.service.ProducerService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -49,12 +50,12 @@ public class ProducerController {
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "x-api-key")
-    public ResponseEntity<ProducerGetResponse> save(@RequestBody ProducerPostRequest producerPostRequest, @RequestHeader HttpHeaders headers) {
+    public ResponseEntity<ProducerPostResponse> save(@RequestBody ProducerPostRequest producerPostRequest, @RequestHeader HttpHeaders headers) {
         var producer = MAPPER.toProducer(producerPostRequest);
 
         var producerSaved = producerService.save(producer);
 
-        var response = MAPPER.toProducerGetResponse(producer);
+        var response = MAPPER.producerPostResponse(producerSaved);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
