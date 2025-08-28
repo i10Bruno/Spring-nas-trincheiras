@@ -29,7 +29,7 @@ public class ProducerHardCodedRepository {
 
     }
     public  List<Producer> findByName(String name) {
-        return PRODUCERS.stream().filter(anime -> anime.getName().equalsIgnoreCase(name)).toList();
+        return PRODUCERS.stream().filter(producer -> producer.getName().equalsIgnoreCase(name)).toList();
     }
 
     public Producer save(Producer producer){
