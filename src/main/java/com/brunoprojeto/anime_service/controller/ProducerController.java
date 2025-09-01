@@ -7,10 +7,13 @@ import com.brunoprojeto.anime_service.request.ProducerPutRequest;
 import com.brunoprojeto.anime_service.response.ProducerGetResponse;
 import com.brunoprojeto.anime_service.response.ProducerPostResponse;
 import com.brunoprojeto.anime_service.service.ProducerService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -18,17 +21,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("v1/producer")
+@RequiredArgsConstructor
+
 public class ProducerController {
 
     private static final ProducerMapper MAPPER = ProducerMapper.INSTANCE;
 
-    private ProducerService producerService;
-
-
-    public ProducerController(){
-
-        this.producerService = new ProducerService();
-    }
+    private final ProducerService producerService;
 
 
     @GetMapping

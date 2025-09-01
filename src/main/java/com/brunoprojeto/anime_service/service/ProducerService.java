@@ -2,20 +2,22 @@ package com.brunoprojeto.anime_service.service;
 
 import com.brunoprojeto.anime_service.domain.Producer;
 import com.brunoprojeto.anime_service.repository.ProducerHardCodedRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+@Service
+
+//cria construtores para todos quem tenha final
+@RequiredArgsConstructor
+
 
 public class ProducerService {
 
-private ProducerHardCodedRepository repository;
-
-
-public ProducerService(){
-
-    this.repository = new ProducerHardCodedRepository();
-}
+private final ProducerHardCodedRepository repository;
 
 
 public List<Producer> findAll(String name){
