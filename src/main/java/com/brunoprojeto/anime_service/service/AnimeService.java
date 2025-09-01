@@ -5,20 +5,20 @@ import com.brunoprojeto.anime_service.domain.Producer;
 import com.brunoprojeto.anime_service.repository.AnimeHardCodedRepository;
 import com.brunoprojeto.anime_service.repository.ProducerHardCodedRepository;
 import com.brunoprojeto.anime_service.request.AnimePutRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+
+@Service
+@RequiredArgsConstructor
+
 public class AnimeService {
     //importando  " o banco de dados " a simulação de um
-    private AnimeHardCodedRepository repository;
-
-    public AnimeService(){
-
-        this.repository =new AnimeHardCodedRepository();
-
-    }
+    private  final AnimeHardCodedRepository repository;
 
     public List<Anime>findAll(String name){
 

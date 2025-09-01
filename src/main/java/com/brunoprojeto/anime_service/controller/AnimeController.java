@@ -8,6 +8,7 @@ import com.brunoprojeto.anime_service.response.AnimeGetResponse;
 import com.brunoprojeto.anime_service.response.AnimePostResponse;
 import com.brunoprojeto.anime_service.service.AnimeService;
 import com.brunoprojeto.anime_service.service.ProducerService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +20,11 @@ import java.util.List;
 @RestController
 @RequestMapping("v1/animes")
 @Slf4j
+@RequiredArgsConstructor
 public class AnimeController {
 
     private static final AnimeMapper MAPPER = AnimeMapper.INSTANCE;
-    private AnimeService Service;
-    public AnimeController (){
-
-        this.Service = new AnimeService();
-    }
+    private  final AnimeService Service;
 
 
     @GetMapping
