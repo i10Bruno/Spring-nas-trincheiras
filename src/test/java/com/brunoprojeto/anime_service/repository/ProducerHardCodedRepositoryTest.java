@@ -43,9 +43,40 @@ class ProducerHardCodedRepositoryTest {
 
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
         var producers= repository.findAll();
-        org.assertj.core.api.Assertions.assertThat(producers).isNotNull().hasSize(3);
+        org.assertj.core.api.Assertions.assertThat(producers).isNotNull().hasSameElementsAs(producerList);
 
 
     }
+    @Test
+    @DisplayName("findByid returns a producer with given id")
+    void findByid_ReturnsProducersByid_WhenSuccesful(){
+        BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+        var expectedProducer= producerList.getFirst();
+        var producers= repository.findByid(expectedProducer.getId());
+        org.assertj.core.api.Assertions.assertThat(producers).isPresent().contains(expectedProducer);
+
+
+    }
+
+    @Test
+    @DisplayName("findByname returns empty when name is null")
+    void findByname_ReturnsEmptyList_WhenNameIsNull(){
+        BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+        var producers= repository.findByName(null);
+        org.assertj.core.api.Assertions.assertThat(producers).isNotNull().isEmpty();
+
+
+    }
+    @Test
+    @DisplayName("findByname returns List with found object when name exists")
+    void findByname_ReturnsFoundProducerInList_WhenNameIsFound(){
+        BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+        var expectedProducer= producerList.getFirst();
+        var producers= repository.findByName(expectedProducer.getName());
+        org.assertj.core.api.Assertions.assertThat(producers).contains(expectedProducer);
+
+
+    }
+
 
 }
