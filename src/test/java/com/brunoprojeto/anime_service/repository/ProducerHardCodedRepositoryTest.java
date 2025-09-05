@@ -1,10 +1,7 @@
 package com.brunoprojeto.anime_service.repository;
 
 import com.brunoprojeto.anime_service.domain.Producer;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
@@ -18,6 +15,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ProducerHardCodedRepositoryTest {
     //injeção de dependencia do mockito
     @InjectMocks
@@ -35,10 +33,10 @@ class ProducerHardCodedRepositoryTest {
         var studioGhibli = Producer.builder().id(3L).name("Studio Ghibli").createdAt(LocalDateTime.now()).build();
 
         producerList.addAll(List.of(ufotable, witStudio, studioGhibli));
-
     }
     @Test
     @DisplayName("findall return a list whith all producers")
+    @Order(1)
     void findAll_ReturnsAllProducers_WhenSuccesful(){
 
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
@@ -49,6 +47,7 @@ class ProducerHardCodedRepositoryTest {
     }
     @Test
     @DisplayName("findByid returns a producer with given id")
+    @Order(2)
     void findByid_ReturnsProducersByid_WhenSuccesful(){
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
         var expectedProducer= producerList.getFirst();
@@ -60,6 +59,7 @@ class ProducerHardCodedRepositoryTest {
 
     @Test
     @DisplayName("findByname returns empty when name is null")
+    @Order(3)
     void findByname_ReturnsEmptyList_WhenNameIsNull(){
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
         var producers= repository.findByName(null);
@@ -69,6 +69,7 @@ class ProducerHardCodedRepositoryTest {
     }
     @Test
     @DisplayName("findByname returns List with found object when name exists")
+    @Order(4)
     void findByname_ReturnsFoundProducerInList_WhenNameIsFound(){
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
         var expectedProducer= producerList.getFirst();
