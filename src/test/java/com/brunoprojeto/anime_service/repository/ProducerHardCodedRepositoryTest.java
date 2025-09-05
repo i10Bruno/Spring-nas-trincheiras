@@ -1,6 +1,7 @@
 package com.brunoprojeto.anime_service.repository;
 
 import com.brunoprojeto.anime_service.domain.Producer;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
@@ -75,6 +76,57 @@ class ProducerHardCodedRepositoryTest {
         var expectedProducer= producerList.getFirst();
         var producers= repository.findByName(expectedProducer.getName());
         org.assertj.core.api.Assertions.assertThat(producers).contains(expectedProducer);
+
+
+    }
+    @Test
+    @DisplayName("Save creates a producer")
+    @Order(5)
+    void Save_CreatesProducerInList_WhenNameIsFound(){
+        BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+        var ProducerToSave=Producer.builder().id(99L).name("MAPPA").createdAt(LocalDateTime.now()).build();
+        var producers= repository.save(ProducerToSave);
+        //org.assertj.core.api.Assertions.assertThat(producers).isEqualTo(ProducerToSave).hasAllNullFieldsOrProperties();
+        org.assertj.core.api.Assertions.assertThat(producers)
+                .isNotNull()
+                .isEqualTo(ProducerToSave);
+        var producerSavedOptional = repository.findByid(ProducerToSave.getId());
+        org.assertj.core.api.Assertions.assertThat(producerSavedOptional).isPresent().contains(ProducerToSave);
+
+
+    }
+    @Test
+    @DisplayName("delete remove a producer")
+    @Order(6)
+    void delete_RemoveProducers_whenSuccesful(){
+        BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+        var producerToDelete= producerList.getFirst();
+        repository.delete(producerToDelete);
+
+
+        org.assertj.core.api.Assertions.assertThat(this.producerList)
+                .doesNotContain(producerToDelete);
+
+
+    }
+    @Test
+    @DisplayName("uptate updates a  producer")
+    @Order(7)
+    void update_updatesProducer_WhenSuccesful(){
+        BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+        var producerToUpdate = this.producerList.getFirst();
+        producerToUpdate.setName("Aniplex");
+        repository.update(producerToUpdate);
+
+        Assertions.assertThat(this.producerList).contains(producerToUpdate);
+        var producerUpdatedOptional = repository.findByid(producerToUpdate.getId());
+        Assertions.assertThat(producerUpdatedOptional).isPresent();
+        Assertions.assertThat(producerUpdatedOptional.get().getName())
+                .isEqualTo("Aniplex");
+        Assertions.assertThat(producerUpdatedOptional.get())
+                .isEqualTo(producerToUpdate);
+
+
 
 
     }

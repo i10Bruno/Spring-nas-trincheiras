@@ -60,8 +60,6 @@ public class AnimeController {
         Service.delete(id);
         return ResponseEntity.noContent().build();
 
-
-
     }
 
     @PutMapping
