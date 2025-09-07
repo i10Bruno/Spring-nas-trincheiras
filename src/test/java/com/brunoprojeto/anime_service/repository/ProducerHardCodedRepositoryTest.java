@@ -39,7 +39,6 @@ class ProducerHardCodedRepositoryTest {
     @DisplayName("findall return a list whith all producers")
     @Order(1)
     void findAll_ReturnsAllProducers_WhenSuccesful(){
-
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
         var producers= repository.findAll();
         org.assertj.core.api.Assertions.assertThat(producers).isNotNull().hasSameElementsAs(producerList);
