@@ -1,6 +1,7 @@
 package com.brunoprojeto.anime_service.repository;
 
 import com.brunoprojeto.anime_service.domain.Anime;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
@@ -111,6 +112,30 @@ public class AnimeHardCodedRepositoryTests {
         repository.delete(expected);
         var animes = expected.getName();
         org.assertj.core.api.Assertions.assertThat(this.AnimesList).doesNotContain(expected);
+
+    }
+    @Test
+    @DisplayName("updated")
+    @Order(7)
+
+
+
+    void updated(){
+        BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
+        var expected=this.AnimesList.getFirst();
+        expected.setName("neymar");
+        repository.update(expected);
+
+        Assertions.assertThat(this.AnimesList).contains(expected);
+
+        var animeuptadedoptional = repository.findByid(expected.getId());
+
+        Assertions.assertThat(animeuptadedoptional).isPresent();
+
+
+        Assertions.assertThat(animeuptadedoptional.get())
+                .isEqualTo(expected);
+
 
     }
 
