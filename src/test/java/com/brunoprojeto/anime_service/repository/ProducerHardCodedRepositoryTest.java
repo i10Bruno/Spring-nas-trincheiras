@@ -102,7 +102,6 @@ class ProducerHardCodedRepositoryTest {
         var producerToDelete= producerList.getFirst();
         repository.delete(producerToDelete);
 
-
         org.assertj.core.api.Assertions.assertThat(this.producerList)
                 .doesNotContain(producerToDelete);
 
