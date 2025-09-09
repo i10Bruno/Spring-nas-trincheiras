@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -75,6 +76,18 @@ class ProducerServiceTest {
 
         var producersFound= service.findAll(name);
         org.assertj.core.api.Assertions.assertThat(producersFound).isNotNull().isEmpty();
+
+    }
+    @Test
+    @DisplayName("findByid returns a producer with given id")
+    @Order(4)
+    void findByid_returns(){
+        var name =producerList.getFirst();
+        var expected=Optional.of(name).get();
+        BDDMockito.when(repository.findByid(name.getId())).thenReturn(Optional.of(name));
+
+        var producersFound= service.findById(expected.getId());
+        org.assertj.core.api.Assertions.assertThat(producersFound).isEqualTo(expected);
 
     }
 
