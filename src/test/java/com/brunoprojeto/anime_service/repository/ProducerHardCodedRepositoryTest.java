@@ -92,7 +92,6 @@ class ProducerHardCodedRepositoryTest {
         var producerSavedOptional = repository.findByid(ProducerToSave.getId());
         org.assertj.core.api.Assertions.assertThat(producerSavedOptional).isPresent().contains(ProducerToSave);
 
-
     }
     @Test
     @DisplayName("delete remove a producer")
