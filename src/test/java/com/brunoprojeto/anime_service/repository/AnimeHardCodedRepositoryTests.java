@@ -25,7 +25,7 @@ public class AnimeHardCodedRepositoryTests {
     @Mock
     private AnimeData animeData;
 
-    private  final List<Anime> AnimesList = new ArrayList<>();
+    private List<Anime> AnimesList;
 
     @BeforeEach
    void  init () {
@@ -33,7 +33,7 @@ public class AnimeHardCodedRepositoryTests {
         var kaijuu = Anime.builder().id(2L).name("Kaijuu-8gou").build();
         var kimetsuNoYaiba = Anime.builder().id(3L).name("Kimetsu No Yaiba").build();
 
-        AnimesList.addAll(List.of(ninjaKamui, kaijuu, kimetsuNoYaiba));
+        AnimesList= new ArrayList<>(List.of(ninjaKamui, kaijuu, kimetsuNoYaiba));
     }
     @Test
     @DisplayName("findall return a list whith all animes")
@@ -44,11 +44,11 @@ public class AnimeHardCodedRepositoryTests {
         BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
 
         var animes = repository.findAll();
-        org.assertj.core.api.Assertions.assertThat(animes).isNotNull().hasSameElementsAs(AnimesList);
+      Assertions.assertThat(animes).isNotNull().hasSameElementsAs(AnimesList);
 
     }
     @Test
-    @DisplayName("findall a Anime by id")
+    @DisplayName("findByid return an anime with given id" )
     @Order(2)
     void findByid_ReturnsAnimeById_WhenSuccesful (){
 
@@ -77,7 +77,7 @@ public class AnimeHardCodedRepositoryTests {
         var animes = repository.findByName(expected.getName());
 
 
-        org.assertj.core.api.Assertions.assertThat(animes).contains(expected);
+        org.assertj.core.api.Assertions.assertThat(animes).hasSize(1).contains(expected);
 
     }
     //findByName
@@ -91,36 +91,43 @@ public class AnimeHardCodedRepositoryTests {
 
     }
     @Test
-    @DisplayName("save")
+    @DisplayName("save creates an anime")
     @Order(5)
-    void save(){
+    void save_CreatesAnime_WhenSuccesfull(){
         BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
         var expected=Anime.builder().id(1L).name("Ninja Kamui").build();
 
 
+
         var animes= repository.save(expected);
-        org.assertj.core.api.Assertions.assertThat(animes).isNotNull().isEqualTo(expected);
+        Assertions.assertThat(animes).isEqualTo(expected).hasNoNullFieldsOrProperties();
+
+        var AnimeSavedOptional= repository.findByid(expected.getId());
+
+        Assertions.assertThat(AnimeSavedOptional).isPresent().contains(expected);
 
     }
     @Test
-    @DisplayName("delete")
+    @DisplayName("delete removes an anime")
     @Order(6)
 
-    void delete(){
+    void delete_RemoveAnime_WhenSuccesfull(){
         BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
         var expected=AnimesList.getFirst();
+
+
         repository.delete(expected);
-        var animes = expected.getName();
-        org.assertj.core.api.Assertions.assertThat(this.AnimesList).doesNotContain(expected);
+
+        var animes = repository.findAll();
+        org.assertj.core.api.Assertions.assertThat(animes).isNotEmpty().doesNotContain(expected);
 
     }
     @Test
-    @DisplayName("updated")
+    @DisplayName("update updates an anime")
     @Order(7)
 
 
-
-    void updated(){
+    void update_UpdatesAnime_WHenSuccesfull(){
         BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
         var expected=this.AnimesList.getFirst();
         expected.setName("neymar");
