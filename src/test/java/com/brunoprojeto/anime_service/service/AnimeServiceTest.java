@@ -5,6 +5,7 @@ import com.brunoprojeto.anime_service.domain.Producer;
 import com.brunoprojeto.anime_service.repository.AnimeHardCodedRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -153,7 +154,20 @@ public class AnimeServiceTest {
 
 
     }
+    @Test
+    @DisplayName("update throws ResponseStatusException when anime is not found")
+    @Order(10)
+    void update_ThrowsResponseStatusException_whenAnimeIsNotFound(){
+        var animeToUP= AnimesList.getFirst();
+        BDDMockito.when(repository.findByid(ArgumentMatchers.anyLong())
+        ).thenReturn(Optional.empty());
 
+
+        assertThatException()
+                .isThrownBy(() -> service.update(animeToUP))
+                .isInstanceOf(ResponseStatusException.class);
+
+    }
 
 
 
