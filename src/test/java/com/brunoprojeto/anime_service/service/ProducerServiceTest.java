@@ -28,8 +28,6 @@ class ProducerServiceTest {
     @Mock
     private ProducerHardCodedRepository repository;
 
-
-
     private List<Producer> producerList; // 1 usage
 
     @BeforeEach
