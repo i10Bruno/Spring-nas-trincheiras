@@ -9,10 +9,15 @@ import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThatException;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -43,8 +48,8 @@ public class AnimeServiceTest {
     @Order(1)
     void findAll_ReturnsAllProducers_WhenArgumentsIsNull (){
         BDDMockito.when(repository.findAll()).thenReturn(AnimesList);
-        var animes =repository.findAll();
-        org.assertj.core.api.Assertions.assertThat(animes).isNotNull().hasSameElementsAs(AnimesList);
+        var animesFound =repository.findAll();
+        org.assertj.core.api.Assertions.assertThat(animesFound).isNotNull().hasSameElementsAs(AnimesList);
 
     }
     @Test
@@ -55,13 +60,70 @@ public class AnimeServiceTest {
 
         var animesExpected= Collections.singletonList(expected);
         BDDMockito.when(repository.findByName(expected.getName())).thenReturn(animesExpected);
-        var animes =service.findAll(expected.getName());
-        org.assertj.core.api.Assertions.assertThat(animes).containsAll(animesExpected);
+        var animesFound =service.findAll(expected.getName());
+        org.assertj.core.api.Assertions.assertThat(animesFound).containsAll(animesExpected);
 
     }
 
+    @Test
+    @DisplayName("findALL returns Empty list when name is not found")
+    @Order(3)
+    void findByname_ReturnsEmptyList_WhenNameIsNotFound(){
+        var name ="not-found";
+        BDDMockito.when(repository.findByName(name)).thenReturn(Collections.emptyList());
+
+        var animesFound =service.findAll(name);
+        org.assertj.core.api.Assertions.assertThat(animesFound).isEmpty();
 
 
+    }
+    @Test
+    @DisplayName("findByid returns a producer with given id")
+    @Order(4)
+    void findByid_returnsProducerById_WhenSucceful(){
 
+        var name = AnimesList.getFirst();
+        BDDMockito.when(repository.findByid(name.getId())).thenReturn(Optional.of(name));
+        var animesFound =service.findById(name.getId());
+        org.assertj.core.api.Assertions.assertThat(animesFound).isEqualTo(name);
+
+    }
+
+    @Test
+    @DisplayName("findByid  throws ResponseStatusException when producer is not found")
+    @Order(5)
+    void findByid_ThrowsResponseStatusException_WhenProducerIsNotFound() {
+        var expectedAnime = AnimesList.getFirst();
+
+        BDDMockito.when(repository.findByid(expectedAnime.getId())).thenReturn(Optional.empty());
+
+        assertThatException()
+                .isThrownBy(() -> service.findById(expectedAnime.getId()))
+                .isInstanceOf(ResponseStatusException.class);
+    }
+    @Test
+    @DisplayName("Save creates a anime")
+    @Order(6)
+    void Save_CreatesProducer_WhenSuccesful(){
+        var expectedAnime = AnimesList.getFirst();
+        BDDMockito.when(repository.save(expectedAnime)).thenReturn(expectedAnime);
+        var animeSaved =service.save(expectedAnime);
+
+        org.assertj.core.api.Assertions.assertThat(animeSaved).isEqualTo(expectedAnime).hasNoNullFieldsOrProperties();
+
+
+    }
+    @Test
+    @DisplayName("delete remove a anime")
+    @Order(7)
+    void delete_RemoveAnime_whenSuccesful(){
+        var expectedAnime = AnimesList.getFirst();
+        BDDMockito.when(repository.findByid(expectedAnime.getId())).thenReturn(Optional.of(expectedAnime));
+        var animesFound =service.findAll(expectedAnime.getName());
+
+        BDDMockito.doNothing().when(repository).delete(expectedAnime);
+        assertThatNoException().isThrownBy(()->service.delete(expectedAnime.getId()));
+
+    }
 
 }
