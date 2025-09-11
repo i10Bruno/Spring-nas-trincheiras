@@ -16,8 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThatException;
-import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -125,5 +124,37 @@ public class AnimeServiceTest {
         assertThatNoException().isThrownBy(()->service.delete(expectedAnime.getId()));
 
     }
+    @Test
+    @DisplayName("delete throws ResponseStatusException when Anime is not found")
+    @Order(8)
+    void delete_ThrowsResponseStatusException_whenAnimesIsNotFound(){
+        var animeToDelete= AnimesList.getFirst();
+        BDDMockito.when(repository.findByid(animeToDelete.getId())).thenReturn(Optional.empty());
+
+
+        assertThatException()
+                .isThrownBy(() -> service.delete(animeToDelete.getId()))
+                .isInstanceOf(ResponseStatusException.class);
+
+    }
+    @Test
+    @DisplayName("uptate updates a  anime")
+    @Order(9)
+    void update_updatesAnime_WhenSuccesful(){
+
+        var animeToupdate = AnimesList.getFirst();
+        animeToupdate.setName("neymar");
+        BDDMockito.when(repository.findByid(animeToupdate.getId())).thenReturn(Optional.of(animeToupdate));
+
+
+        assertThatNoException()
+                .isThrownBy(() -> service.update(animeToupdate));
+
+
+
+    }
+
+
+
 
 }
