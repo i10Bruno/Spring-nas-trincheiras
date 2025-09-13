@@ -105,7 +105,7 @@ public class AnimeServiceTest {
     @DisplayName("Save creates a anime")
     @Order(6)
     void Save_CreatesProducer_WhenSuccesful(){
-        var expectedAnime = AnimesList.getFirst();
+        var expectedAnime = Anime.builder().id(10L).name("Ney").build();;
         BDDMockito.when(repository.save(expectedAnime)).thenReturn(expectedAnime);
         var animeSaved =service.save(expectedAnime);
 
