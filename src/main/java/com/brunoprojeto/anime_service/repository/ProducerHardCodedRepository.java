@@ -1,5 +1,4 @@
 package com.brunoprojeto.anime_service.repository;
-
 import com.brunoprojeto.anime_service.domain.Producer;
 import external.dependency.Connection;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +14,6 @@ import java.util.Optional;
 
 public class ProducerHardCodedRepository {
 
-    private final Connection connection;
     private  final ProducerData producerData;
 
 
