@@ -6,6 +6,7 @@ import com.brunoprojeto.anime_service.repository.ProducerData;
 import com.brunoprojeto.anime_service.repository.ProducerHardCodedRepository;
 import com.brunoprojeto.anime_service.service.ProducerService;
 import org.junit.jupiter.api.*;
+import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -32,6 +35,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatException;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @WebMvcTest(controllers = ProducerController.class)
@@ -41,6 +45,11 @@ class ProducerControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+
+    @MockitoSpyBean
+    private ProducerHardCodedRepository repository;
+
 
     @MockitoBean
     private ProducerData producerData;
@@ -75,7 +84,7 @@ class ProducerControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/v1/producer"))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(response));
 
     }
@@ -91,7 +100,7 @@ class ProducerControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/v1/producer").param("name",name))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(response));
 
     }
@@ -107,7 +116,7 @@ class ProducerControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/v1/producer").param("name",name))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(response));
 
     }
@@ -123,7 +132,7 @@ class ProducerControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/v1/producer/{id}",id))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(response));
 
     }
@@ -138,12 +147,28 @@ class ProducerControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/v1/producer/{id}",id))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.status().reason("producers not found "));
+                .andExpect(status().isNotFound())
+                .andExpect(status().reason("producers not found"));
+
 
     }
 
+    @Test
+    @DisplayName("POST   v1/producer  creates a producer")
+    @Order(6)
+    void Save_CreatesProducer_WhenSuccesful() throws Exception{
+        var request = readResourceFile("producer/post-request-producer-200.json");
+        var response = readResourceFile("producer/post-response-producer-201.json");
+        var ProducerToSave=Producer.builder().id(99L).name("MAPPA").createdAt(LocalDateTime.now()).build();
 
+        BDDMockito.when(repository.save(ArgumentMatchers.any())).thenReturn(ProducerToSave);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/v1/producer").content(request).header("x-api-key","v1").contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isCreated());
+
+
+    }
 
 
 
