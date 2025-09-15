@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
@@ -20,7 +21,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,21 +42,23 @@ class ProducerControllerTest {
     @MockitoBean
     private ProducerData producerData;
 
+    @Autowired
+    private ResourceLoader resourceLoader;
+
 
     private List<Producer> producerList; // 1 usage
 
     @BeforeEach
     void init() {
-        var ufotable = Producer.builder().id(1L).name("Ufotable").createdAt(LocalDateTime.now()).build();
-        var witStudio = Producer.builder().id(2L).name("Wit Studio").createdAt(LocalDateTime.now()).build();
-        var studioGhibli = Producer.builder().id(3L).name("Studio Ghibli").createdAt(LocalDateTime.now()).build();
+        var dateTime = "2025-09-15T09:26:15.8409071";
+        var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS");
+        var localDateTime = LocalDateTime.parse(dateTime, formatter);
+        var ufotable = Producer.builder().id(1L).name("Ufotable").createdAt(localDateTime).build();
+        var witStudio = Producer.builder().id(2L).name("Wit Studio").createdAt(localDateTime).build();
+        var studioGhibli = Producer.builder().id(3L).name("Studio Ghibli").createdAt(localDateTime).build();
 
         producerList= new ArrayList<>(List.of(ufotable, witStudio, studioGhibli));
     }
-
-
-
-
 
 
 
@@ -61,11 +67,23 @@ class ProducerControllerTest {
     @Order(1)
     void findAll_ReturnsAllProducers_WhenArgumentsIsNull() throws Exception {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+        var response = readResourceFile("producer/get-producer-null-name-200.json");
+
+
         mockMvc.perform(MockMvcRequestBuilders.get("/v1/producer"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].id").value(1L));
+                .andExpect(MockMvcResultMatchers.content().json(response));
 
+    }
+
+
+
+
+    private String readResourceFile(String filename) throws IOException {
+
+        var file= resourceLoader.getResource("classpath:%s".formatted(filename)).getFile();
+        return  new String(Files.readAllBytes(file.toPath()));
     }
 
 }
