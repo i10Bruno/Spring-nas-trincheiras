@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,7 +28,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThatException;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -63,7 +66,7 @@ class ProducerControllerTest {
 
 
     @Test
-    @DisplayName("findall return a list whith all producers when arguments is null")
+    @DisplayName("GET v1/producer findall return a list whith all producers when arguments is null")
     @Order(1)
     void findAll_ReturnsAllProducers_WhenArgumentsIsNull() throws Exception {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
@@ -76,6 +79,70 @@ class ProducerControllerTest {
                 .andExpect(MockMvcResultMatchers.content().json(response));
 
     }
+
+    @Test
+    @DisplayName(" GET v1/producer?param=Ufotable findAll returns List with found object when name exists")
+    @Order(2)
+    void findAll_ReturnsFoundProducerInList_WhenNameIsFound() throws Exception {
+        BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+        var response = readResourceFile("producer/get-producer-ufotable-name-200.json");
+        var name="Ufotable";
+
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/producer").param("name",name))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(response));
+
+    }
+
+    @Test
+    @DisplayName(" GET v1/producer?name=x findALL returns Empty list when name is not found")
+    @Order(3)
+    void findAll_ReturnsEmptyList_WhenNameIsNotFound() throws Exception {
+        BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+        var response = readResourceFile("producer/get-producer-x-name-200.json");
+        var name="x";
+
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/producer").param("name",name))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(response));
+
+    }
+
+    @Test
+    @DisplayName("GET v1/producer/1 findByid returns a producer with given id")
+    @Order(4)
+    void findByid_returnsProducerById_WhenSucceful() throws Exception{
+        BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+        var response = readResourceFile("producer/get-producer-by-id-200.json");
+        var id= 1L;
+
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/producer/{id}",id))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(response));
+
+    }
+    @Test
+    @DisplayName("GET v1/producer/99   throws ResponseStatusException 404 when producer is not found")
+    @Order(5)
+    void findByid_ThrowsResponseStatusException_WhenProducerIsNotFound () throws Exception{
+        BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+
+        var id= 99L;
+
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/producer/{id}",id))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.status().reason("producers not found "));
+
+    }
+
 
 
 
