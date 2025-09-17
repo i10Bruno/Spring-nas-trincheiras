@@ -198,6 +198,31 @@ class ProducerControllerTest {
 
 
     }
+    @Test
+    @DisplayName("DELETE v1/producer/1 delete remove a producer")
+    @Order(9)
+    void delete_RemoveProducers_whenSuccesful()throws Exception {
+        BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+        var id=producerList.getFirst().getId();
+        mockMvc.perform(MockMvcRequestBuilders.delete("/v1/producer/{id}",id))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isNoContent());
+
+
+    }
+
+
+    @Test
+    @DisplayName("DELETE v1/producer/99 throws ResponseStatusException when producer is not found")
+    @Order(10)
+    void delete_ThrowsResponseStatusException_whenProducerIsNotFound()throws Exception {
+        BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+        var id=99L;
+        mockMvc.perform(MockMvcRequestBuilders.delete("/v1/producer/{id}",id))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isNotFound()).andExpect(MockMvcResultMatchers.status().reason("producers not found"));
+
+    }
 
 
     private String readResourceFile(String filename) throws IOException {

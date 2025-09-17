@@ -57,7 +57,7 @@ public class ProducerController {
     }
 
 
-    @DeleteMapping("{$id}")
+    @DeleteMapping("/{id}")
 
     public ResponseEntity<Void> DeleteById(@PathVariable Long id) {
         producerService.delete(id);
