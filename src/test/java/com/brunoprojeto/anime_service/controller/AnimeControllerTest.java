@@ -1,6 +1,7 @@
 package com.brunoprojeto.anime_service.controller;
 
 import com.brunoprojeto.anime_service.domain.Anime;
+import com.brunoprojeto.anime_service.domain.Producer;
 import com.brunoprojeto.anime_service.mapper.AnimeMapperImpl;
 import com.brunoprojeto.anime_service.mapper.ProducerMapperImpl;
 import com.brunoprojeto.anime_service.repository.AnimeData;
@@ -10,6 +11,7 @@ import com.brunoprojeto.anime_service.repository.ProducerHardCodedRepository;
 import com.brunoprojeto.anime_service.service.AnimeService;
 import com.brunoprojeto.anime_service.service.ProducerService;
 import org.junit.jupiter.api.*;
+import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -26,6 +28,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,7 +95,7 @@ class AnimeControllerTest {
 
     }
     @Test
-    @DisplayName(" GET v1/Animes?param=Ninja Kamui findAll returns List with found object when name exists")
+    @DisplayName(" GET v1/Anime?param=Ninja Kamui findAll returns List with found object when name exists")
     @Order(2)
     void findAll_ReturnsFoundAnimesInList_WhenNameIsFound() throws Exception {
         BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);//get-anime-kamui-name-200.json
@@ -113,10 +116,47 @@ class AnimeControllerTest {
                 .andDo(MockMvcResultHandlers.print()).andExpect(status().isOk()).andExpect(content().json(response));
 
     }
+    @Test
+    @DisplayName("GET v1/anime/1 findByid returns a producer with given id")
+    @Order(4)
+    void findByid_returnsProducerById_WhenSucceful() throws Exception{
+        BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
+        String response = readResourceFile("anime/get-anime-by-id-200.json");
+        var id =AnimesList.getFirst().getId();
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/animes/{id}",id))
+                .andDo(MockMvcResultHandlers.print()).andExpect(status().isOk()).andExpect(content().json(response));
 
 
+    }
+    @Test
+    @DisplayName("GET v1/anime/99   throws ResponseStatusException 404 when producer is not found")
+    @Order(5)
+    void findByid_ThrowsResponseStatusException_WhenProducerIsNotFound () throws Exception {
+        BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
+        var id =99L;
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/animes/{id}",id))
+                .andDo(MockMvcResultHandlers.print()).andExpect(status().isNotFound()).andExpect(status().reason("anime not found"));
 
 
+    }
+    @Test
+    @DisplayName("POST v1/anime  creates a producer")
+    @Order(6)
+    void Save_CreatesProducer_WhenSuccesful() throws Exception{
+
+        var request = readResourceFile("anime/post-request-anime-200.json");
+
+        var response = readResourceFile("anime/post-response-anime-201.json");
+        var animeToSave = Anime.builder().id(10L).name("Ney").build();
+        BDDMockito.when(repository.save(ArgumentMatchers.any())).thenReturn(animeToSave);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/v1/animes")
+                        .content(request).header("x-api-key","v1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                        .andDo(MockMvcResultHandlers.print())
+                        .andExpect(status().isCreated());
+
+    }
 
 
 

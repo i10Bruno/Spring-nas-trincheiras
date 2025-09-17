@@ -28,7 +28,7 @@ public class AnimeService {
 
     public Anime findById(Long id) {
         return repository.findByid(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, " anime not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "anime not found"));
     }
 
 

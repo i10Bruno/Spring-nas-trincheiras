@@ -39,7 +39,6 @@ public class AnimeController {
     public ResponseEntity<AnimeGetResponse> findById(@PathVariable Long id) {
         var anime = Service.findById(id);
         var animeGetResponse = mapper.toAnimeGetResponse(anime);
-
         return ResponseEntity.ok(animeGetResponse);
     }
 
