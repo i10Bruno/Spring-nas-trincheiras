@@ -66,9 +66,9 @@ public class ProducerController {
 
 
 
-    @PutMapping("{$id}")
+    @PutMapping()
 
-    public ResponseEntity<Void> updated(@PathVariable ProducerPutRequest request) {
+    public ResponseEntity<Void> updated(@RequestBody  ProducerPutRequest request) {
 
         var requested= mapper.toProducerPutRequest(request);
 

@@ -148,9 +148,6 @@ class ProducerServiceTest {
                 .isThrownBy(() -> service.update(producerToUpdate));
 
 
-
-
-
     }
     @Test
     @DisplayName("update throws ResponseStatusException when producer is not found")

@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatException;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -170,6 +171,33 @@ class ProducerControllerTest {
 
     }
 
+    @Test
+    @DisplayName(" PUT v1/producer  updates a  producer")
+    @Order(7)
+    void update_updatesProducer_WhenSuccesful() throws Exception{
+        var request = readResourceFile("producer/put-request-producer-200.json");
+        BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+        mockMvc.perform(MockMvcRequestBuilders.put("/v1/producer").content(request)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isNoContent());
+
+    }
+    @Test
+    @DisplayName(" PUT v1/producer throws ResponseStatusException when producer is not found")
+    @Order(8)
+    void update_ThrowsResponseStatusException_whenProducerIsNotFound()throws Exception {
+        var request = readResourceFile("producer/put-request-producer-404.json");
+        BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+        mockMvc.perform(MockMvcRequestBuilders.put("/v1/producer").content(request)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isNotFound()).andExpect(MockMvcResultMatchers.status().reason("producers not found"));
+
+
+
+
+    }
 
 
     private String readResourceFile(String filename) throws IOException {
@@ -177,5 +205,6 @@ class ProducerControllerTest {
         var file= resourceLoader.getResource("classpath:%s".formatted(filename)).getFile();
         return  new String(Files.readAllBytes(file.toPath()));
     }
+
 
 }
