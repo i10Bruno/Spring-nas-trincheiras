@@ -158,6 +158,59 @@ class AnimeControllerTest {
 
     }
 
+    @Test
+    @DisplayName(" PUT v1/anime  updates a  producer")
+    @Order(7)
+    void update_updatesProducer_WhenSuccesful() throws Exception{
+        var request = readResourceFile("anime/put-request-anime-200.json");
+        BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
+        mockMvc.perform(MockMvcRequestBuilders.put("/v1/animes").content(request)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isNoContent());
+
+    }
+    @Test
+    @DisplayName(" PUT v1/anime throws ResponseStatusException when producer is not found")
+    @Order(8)
+    void update_ThrowsResponseStatusException_whenProducerIsNotFound()throws Exception {
+        var request = readResourceFile("anime/put-request-anime-404.json");
+        BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
+        mockMvc.perform(MockMvcRequestBuilders.put("/v1/animes").content(request)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isNotFound()).andExpect(MockMvcResultMatchers.status().reason("anime not found"));
+
+
+
+
+    }
+    @Test
+    @DisplayName("DELETE v1/anime/1 delete remove a producer")
+    @Order(9)
+    void delete_RemoveProducers_whenSuccesful()throws Exception {
+        BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
+        var id=AnimesList.getFirst().getId();
+        mockMvc.perform(MockMvcRequestBuilders.delete("/v1/animes/{id}",id))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isNoContent());
+
+
+    }
+
+
+    @Test
+    @DisplayName("DELETE v1/anime/99 throws ResponseStatusException when producer is not found")
+    @Order(10)
+    void delete_ThrowsResponseStatusException_whenProducerIsNotFound()throws Exception {
+        BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
+        var id=99L;
+        mockMvc.perform(MockMvcRequestBuilders.delete("/v1/animes/{id}",id))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isNotFound()).andExpect(MockMvcResultMatchers.status().reason("anime not found"));
+
+    }
+
 
 
 

@@ -51,7 +51,7 @@ public class AnimeController {
     }
 
 
-    @DeleteMapping("${id}")
+    @DeleteMapping("/{id}")
 
     public  ResponseEntity<Void> deletebyid (@PathVariable Long id){
         Service.delete(id);
@@ -59,9 +59,9 @@ public class AnimeController {
 
     }
 
-    @PutMapping
+    @PutMapping()
 
-    public  ResponseEntity<Void> update (@PathVariable AnimePutRequest request){
+    public  ResponseEntity<Void> update (@RequestBody AnimePutRequest request){
 
         var animeUpdate= mapper.toAnimer(request);
         Service.update(animeUpdate);
