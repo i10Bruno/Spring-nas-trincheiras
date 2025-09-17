@@ -79,10 +79,12 @@ class ProducerControllerTest {
     @DisplayName("GET v1/producer findall return a list whith all producers when arguments is null")
     @Order(1)
     void findAll_ReturnsAllProducers_WhenArgumentsIsNull() throws Exception {
+
+        // Quando 'producerData.getProducers()' for chamado, retorne a 'producerList'.
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
         var response = readResourceFile("producer/get-producer-null-name-200.json");
 
-
+        //
         mockMvc.perform(MockMvcRequestBuilders.get("/v1/producer"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())

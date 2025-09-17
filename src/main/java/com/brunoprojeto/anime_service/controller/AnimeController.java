@@ -26,7 +26,6 @@ public class AnimeController {
 
     @GetMapping
     public ResponseEntity<List<AnimeGetResponse>> listAll(@RequestParam(required = false) String name) {
-
         //
         var animes = Service.findAll(name);
         var animeGetResponseList = mapper.toAnimeGetResponseList(animes);
@@ -40,7 +39,6 @@ public class AnimeController {
     public ResponseEntity<AnimeGetResponse> findById(@PathVariable Long id) {
         var anime = Service.findById(id);
         var animeGetResponse = mapper.toAnimeGetResponse(anime);
-
 
         return ResponseEntity.ok(animeGetResponse);
     }
