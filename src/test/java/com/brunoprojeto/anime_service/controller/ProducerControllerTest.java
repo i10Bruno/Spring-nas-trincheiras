@@ -1,6 +1,7 @@
 package com.brunoprojeto.anime_service.controller;
 
 import com.brunoprojeto.anime_service.commons.FileUtils;
+import com.brunoprojeto.anime_service.commons.ProducerUtils;
 import com.brunoprojeto.anime_service.domain.Producer;
 import com.brunoprojeto.anime_service.mapper.ProducerMapperImpl;
 import com.brunoprojeto.anime_service.repository.ProducerData;
@@ -49,21 +50,16 @@ class ProducerControllerTest {
     @Autowired
     private FileUtils fileUtils;
 
+    @Autowired
+    private ProducerUtils producerUtils;
 
     private List<Producer> producerList; // 1 usage
 
     @BeforeEach
     void init() {
-        var dateTime = "2025-09-15T09:26:15.8409071";
-        var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS");
-        var localDateTime = LocalDateTime.parse(dateTime, formatter);
-        var ufotable = Producer.builder().id(1L).name("Ufotable").createdAt(localDateTime).build();
-        var witStudio = Producer.builder().id(2L).name("Wit Studio").createdAt(localDateTime).build();
-        var studioGhibli = Producer.builder().id(3L).name("Studio Ghibli").createdAt(localDateTime).build();
 
-        producerList = new ArrayList<>(List.of(ufotable, witStudio, studioGhibli));
+        producerList = producerUtils.newProducerList();
     }
-
 
     @Test
     @DisplayName("GET v1/producer findall return a list whith all producers when arguments is null")
@@ -153,7 +149,7 @@ class ProducerControllerTest {
     void Save_CreatesProducer_WhenSuccesful() throws Exception {
         var request = fileUtils.readResourceFile("producer/post-request-producer-200.json");
         var response = fileUtils.readResourceFile("producer/post-response-producer-201.json");
-        var ProducerToSave = Producer.builder().id(99L).name("MAPPA").createdAt(LocalDateTime.now()).build();
+        var ProducerToSave = producerUtils.newProducerToSave();
 
         BDDMockito.when(repository.save(ArgumentMatchers.any())).thenReturn(ProducerToSave);
 

@@ -1,5 +1,6 @@
 package com.brunoprojeto.anime_service.repository;
 
+import com.brunoprojeto.anime_service.commons.ProducerUtils;
 import com.brunoprojeto.anime_service.domain.Producer;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
@@ -25,15 +26,16 @@ class ProducerHardCodedRepositoryTest {
     @Mock
     private ProducerData producerData;
 
+    @InjectMocks
+    private ProducerUtils producerUtils;
+
     private  List<Producer> producerList; // 1 usage
 
     @BeforeEach
     void init() {
-        var ufotable = Producer.builder().id(1L).name("Ufotable").createdAt(LocalDateTime.now()).build();
-        var witStudio = Producer.builder().id(2L).name("Wit Studio").createdAt(LocalDateTime.now()).build();
-        var studioGhibli = Producer.builder().id(3L).name("Studio Ghibli").createdAt(LocalDateTime.now()).build();
 
-        producerList= new ArrayList<>(List.of(ufotable, witStudio, studioGhibli));
+
+        producerList= producerUtils.newProducerList();
     }
     @Test
     @DisplayName("findall return a list whith all producers")
@@ -83,7 +85,7 @@ class ProducerHardCodedRepositoryTest {
     @Order(5)
     void Save_CreatesProducerInList_WhenNameIsFound(){
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
-        var ProducerToSave=Producer.builder().id(99L).name("MAPPA").createdAt(LocalDateTime.now()).build();
+        var ProducerToSave=producerUtils.newProducerToSave();
         var producers= repository.save(ProducerToSave);
         //org.assertj.core.api.Assertions.assertThat(producers).isEqualTo(ProducerToSave).hasAllNullFieldsOrProperties();
         org.assertj.core.api.Assertions.assertThat(producers)

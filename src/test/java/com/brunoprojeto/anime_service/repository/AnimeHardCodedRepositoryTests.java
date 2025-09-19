@@ -1,5 +1,6 @@
 package com.brunoprojeto.anime_service.repository;
 
+import com.brunoprojeto.anime_service.commons.AnimeUtils;
 import com.brunoprojeto.anime_service.domain.Anime;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
@@ -25,15 +26,15 @@ public class AnimeHardCodedRepositoryTests {
     @Mock
     private AnimeData animeData;
 
+    @InjectMocks
+    private AnimeUtils animeUtils;
+
     private List<Anime> AnimesList;
 
     @BeforeEach
    void  init () {
-        var ninjaKamui = Anime.builder().id(1L).name("Ninja Kamui").build();
-        var kaijuu = Anime.builder().id(2L).name("Kaijuu-8gou").build();
-        var kimetsuNoYaiba = Anime.builder().id(3L).name("Kimetsu No Yaiba").build();
 
-        AnimesList= new ArrayList<>(List.of(ninjaKamui, kaijuu, kimetsuNoYaiba));
+        AnimesList= animeUtils.newAnimeList();
     }
     @Test
     @DisplayName("findall return a list whith all animes")
@@ -95,7 +96,7 @@ public class AnimeHardCodedRepositoryTests {
     @Order(5)
     void save_CreatesAnime_WhenSuccesfull(){
         BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
-        var expected=Anime.builder().id(1L).name("Ninja Kamui").build();
+        var expected=animeUtils.newAnimeToSave();
 
 
 

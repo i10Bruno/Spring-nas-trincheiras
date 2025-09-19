@@ -1,5 +1,6 @@
 package com.brunoprojeto.anime_service.service;
 
+import com.brunoprojeto.anime_service.commons.ProducerUtils;
 import com.brunoprojeto.anime_service.domain.Producer;
 import com.brunoprojeto.anime_service.repository.ProducerHardCodedRepository;
 import org.assertj.core.api.Assertions;
@@ -28,18 +29,17 @@ class ProducerServiceTest {
     @Mock
     private ProducerHardCodedRepository repository;
 
+    @InjectMocks
+    private ProducerUtils producerUtils;
+
     private List<Producer> producerList; // 1 usage
 
     @BeforeEach
     void init() {
-        var ufotable = Producer.builder().id(1L).name("Ufotable").createdAt(LocalDateTime.now()).build();
-        var witStudio = Producer.builder().id(2L).name("Wit Studio").createdAt(LocalDateTime.now()).build();
-        var studioGhibli = Producer.builder().id(3L).name("Studio Ghibli").createdAt(LocalDateTime.now()).build();
 
-        producerList= new ArrayList<>(List.of(ufotable, witStudio, studioGhibli));
+        producerList = producerUtils.newProducerList();
+
     }
-
-
 
     @Test
     @DisplayName("findall return a list whith all producers when arguments is null")
@@ -105,7 +105,7 @@ class ProducerServiceTest {
     @DisplayName("Save creates a producer")
     @Order(6)
     void Save_CreatesProducer_WhenSuccesful(){
-        var ProducerToSave=Producer.builder().id(99L).name("MAPPA").createdAt(LocalDateTime.now()).build();
+        var ProducerToSave=producerUtils.newProducerToSave();
         BDDMockito.when(repository.save(ProducerToSave)).thenReturn(ProducerToSave);
 
         var SavedProducer= service.save(ProducerToSave);

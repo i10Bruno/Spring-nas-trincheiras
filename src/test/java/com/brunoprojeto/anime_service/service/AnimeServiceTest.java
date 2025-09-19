@@ -1,5 +1,7 @@
 package com.brunoprojeto.anime_service.service;
 
+import com.brunoprojeto.anime_service.commons.AnimeUtils;
+import com.brunoprojeto.anime_service.commons.ProducerUtils;
 import com.brunoprojeto.anime_service.domain.Anime;
 import com.brunoprojeto.anime_service.domain.Producer;
 import com.brunoprojeto.anime_service.repository.AnimeHardCodedRepository;
@@ -30,16 +32,15 @@ public class AnimeServiceTest {
     @InjectMocks
     private  AnimeService service;
 
+    @InjectMocks
+    private AnimeUtils animeUtils;
+
     private List<Anime> AnimesList;
 
 
     @BeforeEach
     void  init () {
-        var ninjaKamui = Anime.builder().id(1L).name("Ninja Kamui").build();
-        var kaijuu = Anime.builder().id(2L).name("Kaijuu-8gou").build();
-        var kimetsuNoYaiba = Anime.builder().id(3L).name("Kimetsu No Yaiba").build();
-
-        AnimesList= new ArrayList<>(List.of(ninjaKamui, kaijuu, kimetsuNoYaiba));
+        AnimesList=animeUtils.newAnimeList();
     }
 
 
@@ -105,7 +106,7 @@ public class AnimeServiceTest {
     @DisplayName("Save creates a anime")
     @Order(6)
     void Save_CreatesProducer_WhenSuccesful(){
-        var expectedAnime = Anime.builder().id(10L).name("Ney").build();;
+        var expectedAnime = animeUtils.newAnimeToSave();
         BDDMockito.when(repository.save(expectedAnime)).thenReturn(expectedAnime);
         var animeSaved =service.save(expectedAnime);
 

@@ -1,5 +1,6 @@
 package com.brunoprojeto.anime_service.controller;
 
+import com.brunoprojeto.anime_service.commons.AnimeUtils;
 import com.brunoprojeto.anime_service.domain.Anime;
 import com.brunoprojeto.anime_service.domain.Producer;
 import com.brunoprojeto.anime_service.mapper.AnimeMapperImpl;
@@ -15,6 +16,7 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.MediaType;
@@ -44,6 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 // COMO O @WebMvcTest NÃO IMPORTA BEANS DE OUTRAS CLASSES VC DIZ AO SPRING QUE PARA O CONTROLLER FUNCIONAR VC PRECISA DAS CLASSES ABAIXO
 @Import({AnimeMapperImpl.class , AnimeService.class, AnimeHardCodedRepository.class, AnimeData.class})
+@ComponentScan("com.brunoprojeto.anime_service")
 class AnimeControllerTest {
 
 
@@ -64,21 +67,20 @@ class AnimeControllerTest {
     //A principal função do ResourceLoader é encontrar e ler arquivos, não importa onde eles estejam. Ele usa prefixos especiais para saber onde procurar:
     private ResourceLoader resourceLoader;
 
+    @Autowired
+    private AnimeUtils animeUtils;
 
     private List<Anime> AnimesList;
 
 //O método anotado com BeforeEach será executado antes de cada método de teste (@Test) na classe.
     @BeforeEach
     void  init () {
-        var ninjaKamui = Anime.builder().id(1L).name("Ninja Kamui").build();
-        var kaijuu = Anime.builder().id(2L).name("Kaijuu-8gou").build();
-        var kimetsuNoYaiba = Anime.builder().id(3L).name("Kimetsu No Yaiba").build();
 
-        AnimesList= new ArrayList<>(List.of(ninjaKamui, kaijuu, kimetsuNoYaiba));
+        AnimesList= animeUtils.newAnimeList();
     }
 
     @Test
-    @DisplayName("GET v1/producer return a list whith all animes when arguments is null")
+    @DisplayName("GET v1/anime return a list whith all animes when arguments is null")
     @Order(1)
     void findAll_ReturnsAllAnimes_WhenArgumentsIsNull () throws Exception {
         // Quando 'animeData.getProducers()' for chamado, retorne a 'animerList'.
@@ -147,7 +149,7 @@ class AnimeControllerTest {
         var request = readResourceFile("anime/post-request-anime-200.json");
 
         var response = readResourceFile("anime/post-response-anime-201.json");
-        var animeToSave = Anime.builder().id(10L).name("Ney").build();
+        var animeToSave = animeUtils.newAnimeToSave();
         BDDMockito.when(repository.save(ArgumentMatchers.any())).thenReturn(animeToSave);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/v1/animes")
