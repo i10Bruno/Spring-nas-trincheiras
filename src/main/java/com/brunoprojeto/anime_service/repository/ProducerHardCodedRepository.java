@@ -1,7 +1,8 @@
 package com.brunoprojeto.anime_service.repository;
+import com.brunoprojeto.anime_service.config.Connection;
 import com.brunoprojeto.anime_service.domain.Producer;
-import external.dependency.Connection;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
@@ -9,15 +10,18 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 
 public class ProducerHardCodedRepository {
 
     private  final ProducerData producerData;
+    private final Connection connection;
 
 
     public  List<Producer> findAll() {
+        log.info("Connection{}",connection);
         return producerData.getProducers();
     }
 

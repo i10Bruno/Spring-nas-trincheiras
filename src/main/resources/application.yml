@@ -2,13 +2,13 @@ spring:
   application:
     name: anime-service
 
-
-
 threads:
   virtual:
     enabled: true
-  
 
+server:
+  servlet:
+    context-path: /
 
-error:
-  include-stacktrace: on_param
+  error:
+    include-stacktrace: on_param
