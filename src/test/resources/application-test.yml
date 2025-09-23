@@ -1,5 +1,5 @@
 database:
-  url: test:999
-  username: test
-  password: test
+  url:
+  username: ${LOCAL_USERNAME}
+  password: ${LOCAL_USERNAME}
 

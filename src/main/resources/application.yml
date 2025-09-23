@@ -12,3 +12,8 @@ server:
 
   error:
     include-stacktrace: on_param
+
+database:
+  url:
+  username: ${LOCAL_USERNAME}
+  password: ${LOCAL_USERNAME}
