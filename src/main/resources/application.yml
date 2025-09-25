@@ -17,3 +17,4 @@ database:
   url:
   username: ${LOCAL_USERNAME}
   password: ${LOCAL_USERNAME}
+

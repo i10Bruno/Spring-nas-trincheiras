@@ -8,9 +8,7 @@ import com.brunoprojeto.anime_service.response.ProducerPostResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
-import org.mapstruct.factory.Mappers;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
@@ -24,7 +22,9 @@ public interface ProducerMapper {
     ProducerPostResponse producerPostResponse(Producer producer);
 
     ProducerGetResponse toProducerGetResponse(Producer producer);
-    Producer toProducerPutRequest(ProducerPutRequest producerPutRequest );
+
+    Producer toProducerPutRequest(ProducerPutRequest producerPutRequest);
+
     List<ProducerGetResponse> toProducerGetResponselist(List<Producer> producer);
 
 }

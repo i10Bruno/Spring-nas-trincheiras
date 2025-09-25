@@ -15,7 +15,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -23,9 +22,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -37,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ComponentScan("com.brunoprojeto.anime_service")
 //@ActiveProfiles("test")
 class ProducerControllerTest {
-    private static final String URL="/v1/producer";
+    private static final String URL = "/v1/producer";
     @Autowired
     private MockMvc mockMvc;
 
@@ -121,7 +117,7 @@ class ProducerControllerTest {
         var id = 1L;
 
 
-        mockMvc.perform(MockMvcRequestBuilders.get(URL+"/{id}", id))
+        mockMvc.perform(MockMvcRequestBuilders.get(URL + "/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(response));
@@ -137,7 +133,7 @@ class ProducerControllerTest {
         var id = 99L;
 
 
-        mockMvc.perform(MockMvcRequestBuilders.get(URL+"/{id}", id))
+        mockMvc.perform(MockMvcRequestBuilders.get(URL + "/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isNotFound())
                 .andExpect(status().reason("producers not found"));
@@ -195,7 +191,7 @@ class ProducerControllerTest {
     void delete_RemoveProducers_whenSuccesful() throws Exception {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
         var id = producerList.getFirst().getId();
-        mockMvc.perform(MockMvcRequestBuilders.delete(URL+"/{id}", id))
+        mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isNoContent());
 
@@ -209,7 +205,7 @@ class ProducerControllerTest {
     void delete_ThrowsResponseStatusException_whenProducerIsNotFound() throws Exception {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
         var id = 99L;
-        mockMvc.perform(MockMvcRequestBuilders.delete(URL+"/{id}", id))
+        mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isNotFound()).andExpect(MockMvcResultMatchers.status().reason("producers not found"));
 

@@ -10,11 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -29,31 +25,33 @@ class ProducerHardCodedRepositoryTest {
     @InjectMocks
     private ProducerUtils producerUtils;
 
-    private  List<Producer> producerList; // 1 usage
+    private List<Producer> producerList; // 1 usage
 
     @BeforeEach
     void init() {
 
 
-        producerList= producerUtils.newProducerList();
+        producerList = producerUtils.newProducerList();
     }
+
     @Test
     @DisplayName("findall return a list whith all producers")
     @Order(1)
-    void findAll_ReturnsAllProducers_WhenSuccesful(){
+    void findAll_ReturnsAllProducers_WhenSuccesful() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
-        var producers= repository.findAll();
+        var producers = repository.findAll();
         org.assertj.core.api.Assertions.assertThat(producers).isNotNull().hasSameElementsAs(producerList);
 
 
     }
+
     @Test
     @DisplayName("findByid returns a producer with given id")
     @Order(2)
-    void findByid_ReturnsProducersByid_WhenSuccesful(){
+    void findByid_ReturnsProducersByid_WhenSuccesful() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
-        var expectedProducer= producerList.getFirst();
-        var producers= repository.findByid(expectedProducer.getId());
+        var expectedProducer = producerList.getFirst();
+        var producers = repository.findByid(expectedProducer.getId());
         org.assertj.core.api.Assertions.assertThat(producers).isPresent().contains(expectedProducer);
 
 
@@ -62,31 +60,33 @@ class ProducerHardCodedRepositoryTest {
     @Test
     @DisplayName("findByname returns empty when name is null")
     @Order(3)
-    void findByname_ReturnsEmptyList_WhenNameIsNull(){
+    void findByname_ReturnsEmptyList_WhenNameIsNull() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
-        var producers= repository.findByName(null);
+        var producers = repository.findByName(null);
         org.assertj.core.api.Assertions.assertThat(producers).isNotNull().isEmpty();
 
 
     }
+
     @Test
     @DisplayName("findByname returns List with found object when name exists")
     @Order(4)
-    void findByname_ReturnsFoundProducerInList_WhenNameIsFound(){
+    void findByname_ReturnsFoundProducerInList_WhenNameIsFound() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
-        var expectedProducer= producerList.getFirst();
-        var producers= repository.findByName(expectedProducer.getName());
+        var expectedProducer = producerList.getFirst();
+        var producers = repository.findByName(expectedProducer.getName());
         org.assertj.core.api.Assertions.assertThat(producers).contains(expectedProducer);
 
 
     }
+
     @Test
     @DisplayName("Save creates a producer")
     @Order(5)
-    void Save_CreatesProducerInList_WhenNameIsFound(){
+    void Save_CreatesProducerInList_WhenNameIsFound() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
-        var ProducerToSave=producerUtils.newProducerToSave();
-        var producers= repository.save(ProducerToSave);
+        var ProducerToSave = producerUtils.newProducerToSave();
+        var producers = repository.save(ProducerToSave);
         //org.assertj.core.api.Assertions.assertThat(producers).isEqualTo(ProducerToSave).hasAllNullFieldsOrProperties();
         org.assertj.core.api.Assertions.assertThat(producers)
                 .isNotNull()
@@ -95,12 +95,13 @@ class ProducerHardCodedRepositoryTest {
         org.assertj.core.api.Assertions.assertThat(producerSavedOptional).isPresent().contains(ProducerToSave);
 
     }
+
     @Test
     @DisplayName("delete remove a producer")
     @Order(6)
-    void delete_RemoveProducers_whenSuccesful(){
+    void delete_RemoveProducers_whenSuccesful() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
-        var producerToDelete= producerList.getFirst();
+        var producerToDelete = producerList.getFirst();
         repository.delete(producerToDelete);
 
         org.assertj.core.api.Assertions.assertThat(this.producerList)
@@ -108,10 +109,11 @@ class ProducerHardCodedRepositoryTest {
 
 
     }
+
     @Test
     @DisplayName("uptate updates a  producer")
     @Order(7)
-    void update_updatesProducer_WhenSuccesful(){
+    void update_updatesProducer_WhenSuccesful() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
         var producerToUpdate = this.producerList.getFirst();
         producerToUpdate.setName("Aniplex");
@@ -124,8 +126,6 @@ class ProducerHardCodedRepositoryTest {
                 .isEqualTo("Aniplex");
         Assertions.assertThat(producerUpdatedOptional.get())
                 .isEqualTo(producerToUpdate);
-
-
 
 
     }

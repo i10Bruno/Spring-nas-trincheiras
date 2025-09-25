@@ -20,8 +20,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AnimeController {
 
-    private   final  AnimeMapper mapper;
-    private  final AnimeService Service;
+    private final AnimeMapper mapper;
+    private final AnimeService Service;
 
 
     @GetMapping
@@ -45,7 +45,7 @@ public class AnimeController {
     @PostMapping
     public ResponseEntity<AnimePostResponse> save(@RequestBody AnimePostRequest animePostRequest) {
         var animes = mapper.toAnimer(animePostRequest);
-        var animeSaved  =Service.save(animes);
+        var animeSaved = Service.save(animes);
         var response = mapper.toAnimePostResponse(animeSaved);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -53,7 +53,7 @@ public class AnimeController {
 
     @DeleteMapping("/{id}")
 
-    public  ResponseEntity<Void> deletebyid (@PathVariable Long id){
+    public ResponseEntity<Void> deletebyid(@PathVariable Long id) {
         Service.delete(id);
         return ResponseEntity.noContent().build();
 
@@ -61,20 +61,15 @@ public class AnimeController {
 
     @PutMapping()
 
-    public  ResponseEntity<Void> update (@RequestBody AnimePutRequest request){
+    public ResponseEntity<Void> update(@RequestBody AnimePutRequest request) {
 
-        var animeUpdate= mapper.toAnimer(request);
+        var animeUpdate = mapper.toAnimer(request);
         Service.update(animeUpdate);
 
         return ResponseEntity.noContent().build();
 
 
-
     }
-
-
-
-
 
 
 }

@@ -10,10 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -32,26 +29,28 @@ public class AnimeHardCodedRepositoryTests {
     private List<Anime> AnimesList;
 
     @BeforeEach
-   void  init () {
+    void init() {
 
-        AnimesList= animeUtils.newAnimeList();
+        AnimesList = animeUtils.newAnimeList();
     }
+
     @Test
     @DisplayName("findall return a list whith all animes")
     @Order(1)
-    void findAll_ReturnsAllAnimes_WhenSuccesful (){
+    void findAll_ReturnsAllAnimes_WhenSuccesful() {
 
         // ensinando meu repositorio mock oq teria que retornar
         BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
 
         var animes = repository.findAll();
-      Assertions.assertThat(animes).isNotNull().hasSameElementsAs(AnimesList);
+        Assertions.assertThat(animes).isNotNull().hasSameElementsAs(AnimesList);
 
     }
+
     @Test
-    @DisplayName("findByid return an anime with given id" )
+    @DisplayName("findByid return an anime with given id")
     @Order(2)
-    void findByid_ReturnsAnimeById_WhenSuccesful (){
+    void findByid_ReturnsAnimeById_WhenSuccesful() {
 
         // ensinando meu repositorio mock oq teria que retornar
         BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
@@ -65,10 +64,11 @@ public class AnimeHardCodedRepositoryTests {
         org.assertj.core.api.Assertions.assertThat(animes).isPresent().contains(expected);
 
     }
+
     @Test
     @DisplayName("findall a Anime by Name")
     @Order(3)
-    void findByName_ReturnsAnimeByName_WhenSuccesful (){
+    void findByName_ReturnsAnimeByName_WhenSuccesful() {
 
         // ensinando meu repositorio mock oq teria que retornar
         BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
@@ -81,40 +81,41 @@ public class AnimeHardCodedRepositoryTests {
         org.assertj.core.api.Assertions.assertThat(animes).hasSize(1).contains(expected);
 
     }
+
     //findByName
     @Test
     @DisplayName("findByname returns empty when name is null")
     @Order(4)
-    void findByname_ReturnsEmptyList_WhenNameIsNull(){
+    void findByname_ReturnsEmptyList_WhenNameIsNull() {
         BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
-        var animes= repository.findByName(null);
+        var animes = repository.findByName(null);
         org.assertj.core.api.Assertions.assertThat(animes).isNotNull().isEmpty();
 
     }
+
     @Test
     @DisplayName("save creates an anime")
     @Order(5)
-    void save_CreatesAnime_WhenSuccesfull(){
+    void save_CreatesAnime_WhenSuccesfull() {
         BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
-        var expected=animeUtils.newAnimeToSave();
+        var expected = animeUtils.newAnimeToSave();
 
 
-
-        var animes= repository.save(expected);
+        var animes = repository.save(expected);
         Assertions.assertThat(animes).isEqualTo(expected).hasNoNullFieldsOrProperties();
 
-        var AnimeSavedOptional= repository.findByid(expected.getId());
+        var AnimeSavedOptional = repository.findByid(expected.getId());
 
         Assertions.assertThat(AnimeSavedOptional).isPresent().contains(expected);
 
     }
+
     @Test
     @DisplayName("delete removes an anime")
     @Order(6)
-
-    void delete_RemoveAnime_WhenSuccesfull(){
+    void delete_RemoveAnime_WhenSuccesfull() {
         BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
-        var expected=AnimesList.getFirst();
+        var expected = AnimesList.getFirst();
 
 
         repository.delete(expected);
@@ -123,14 +124,13 @@ public class AnimeHardCodedRepositoryTests {
         org.assertj.core.api.Assertions.assertThat(animes).isNotEmpty().doesNotContain(expected);
 
     }
+
     @Test
     @DisplayName("update updates an anime")
     @Order(7)
-
-
-    void update_UpdatesAnime_WHenSuccesfull(){
+    void update_UpdatesAnime_WHenSuccesfull() {
         BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
-        var expected=this.AnimesList.getFirst();
+        var expected = this.AnimesList.getFirst();
         expected.setName("neymar");
         repository.update(expected);
 
@@ -146,12 +146,6 @@ public class AnimeHardCodedRepositoryTests {
 
 
     }
-
-
-
-
-
-
 
 
 }

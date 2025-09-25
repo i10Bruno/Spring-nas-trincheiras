@@ -12,7 +12,7 @@ import java.util.List;
 public class ProducerUtils {
 
 
-    public List<Producer> newProducerList(){
+    public List<Producer> newProducerList() {
         var dateTime = "2025-09-15T09:26:15.8409071";
         var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS");
         var localDateTime = LocalDateTime.parse(dateTime, formatter);
@@ -24,6 +24,7 @@ public class ProducerUtils {
         return new ArrayList<>(List.of(ufotable, witStudio, studioGhibli));
 
     }
+
     public Producer newProducerToSave() {
         return Producer.builder().id(99L).name("MAPPA").createdAt(LocalDateTime.now()).build();
     }

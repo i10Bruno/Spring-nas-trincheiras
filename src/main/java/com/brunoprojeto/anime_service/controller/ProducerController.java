@@ -22,7 +22,7 @@ import java.util.List;
 
 public class ProducerController {
 
-    private  final ProducerMapper mapper;
+    private final ProducerMapper mapper;
 
     private final ProducerService producerService;
 
@@ -40,8 +40,8 @@ public class ProducerController {
 
     public ResponseEntity<ProducerGetResponse> findByid(@PathVariable Long id) {
 
-       Producer producer= producerService.findById(id);
-       var producers = mapper.toProducerGetResponse(producer);
+        Producer producer = producerService.findById(id);
+        var producers = mapper.toProducerGetResponse(producer);
         return ResponseEntity.ok(producers);
     }
 
@@ -65,12 +65,11 @@ public class ProducerController {
     }
 
 
-
     @PutMapping()
 
-    public ResponseEntity<Void> updated(@RequestBody  ProducerPutRequest request) {
+    public ResponseEntity<Void> updated(@RequestBody ProducerPutRequest request) {
 
-        var requested= mapper.toProducerPutRequest(request);
+        var requested = mapper.toProducerPutRequest(request);
 
         producerService.update(requested);
 

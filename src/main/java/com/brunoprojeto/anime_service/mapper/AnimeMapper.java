@@ -8,7 +8,6 @@ import com.brunoprojeto.anime_service.response.AnimePostResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
@@ -17,7 +16,6 @@ public interface AnimeMapper {
 
 
     @Mapping(target = "id", expression = "java(java.util.concurrent.ThreadLocalRandom.current().nextLong(100_000))")
-
 
 
         //animepostrequest vira anime

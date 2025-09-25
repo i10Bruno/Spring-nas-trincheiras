@@ -6,10 +6,12 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 @Component
 public class ProducerData {
     private final List<Producer> producers = new ArrayList<>();
-     {
+
+    {
         var maapa = Producer.builder().id(1L).name("mappa").createdAt(LocalDateTime.now()).build();
         var kyotoAnimation = Producer.builder().id(2L).name("kyoto animation").createdAt(LocalDateTime.now()).build();
         var madhouse = Producer.builder().id(3L).name("Madhouse").createdAt(LocalDateTime.now()).build();

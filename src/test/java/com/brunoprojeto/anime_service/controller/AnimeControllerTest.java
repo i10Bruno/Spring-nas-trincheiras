@@ -2,15 +2,10 @@ package com.brunoprojeto.anime_service.controller;
 
 import com.brunoprojeto.anime_service.commons.AnimeUtils;
 import com.brunoprojeto.anime_service.domain.Anime;
-import com.brunoprojeto.anime_service.domain.Producer;
 import com.brunoprojeto.anime_service.mapper.AnimeMapperImpl;
-import com.brunoprojeto.anime_service.mapper.ProducerMapperImpl;
 import com.brunoprojeto.anime_service.repository.AnimeData;
 import com.brunoprojeto.anime_service.repository.AnimeHardCodedRepository;
-import com.brunoprojeto.anime_service.repository.ProducerData;
-import com.brunoprojeto.anime_service.repository.ProducerHardCodedRepository;
 import com.brunoprojeto.anime_service.service.AnimeService;
-import com.brunoprojeto.anime_service.service.ProducerService;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
@@ -23,19 +18,16 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 //diz ao spring para carregar apenas os componentes relacionados a controller não carrega @service,@repository,@component
 //controllers = AnimeController.class Isso torna o teste ainda mais rápido e isolado pois vc epecifica qual controller vc quer
@@ -45,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 
 // COMO O @WebMvcTest NÃO IMPORTA BEANS DE OUTRAS CLASSES VC DIZ AO SPRING QUE PARA O CONTROLLER FUNCIONAR VC PRECISA DAS CLASSES ABAIXO
-@Import({AnimeMapperImpl.class , AnimeService.class, AnimeHardCodedRepository.class, AnimeData.class})
+@Import({AnimeMapperImpl.class, AnimeService.class, AnimeHardCodedRepository.class, AnimeData.class})
 @ComponentScan("com.brunoprojeto.anime_service")
 class AnimeControllerTest {
 
@@ -72,17 +64,17 @@ class AnimeControllerTest {
 
     private List<Anime> AnimesList;
 
-//O método anotado com BeforeEach será executado antes de cada método de teste (@Test) na classe.
+    //O método anotado com BeforeEach será executado antes de cada método de teste (@Test) na classe.
     @BeforeEach
-    void  init () {
+    void init() {
 
-        AnimesList= animeUtils.newAnimeList();
+        AnimesList = animeUtils.newAnimeList();
     }
 
     @Test
     @DisplayName("GET v1/anime return a list whith all animes when arguments is null")
     @Order(1)
-    void findAll_ReturnsAllAnimes_WhenArgumentsIsNull () throws Exception {
+    void findAll_ReturnsAllAnimes_WhenArgumentsIsNull() throws Exception {
         // Quando 'animeData.getProducers()' for chamado, retorne a 'animerList'.
         BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
 
@@ -96,55 +88,60 @@ class AnimeControllerTest {
 
 
     }
+
     @Test
     @DisplayName(" GET v1/Anime?param=Ninja Kamui findAll returns List with found object when name exists")
     @Order(2)
     void findAll_ReturnsFoundAnimesInList_WhenNameIsFound() throws Exception {
         BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);//get-anime-kamui-name-200.json
         String response = readResourceFile("anime/get-anime-kamui-name-200.json");
-        var name="Ninja Kamui";
+        var name = "Ninja Kamui";
         mockMvc.perform(MockMvcRequestBuilders.get("/v1/animes").param("name", name))
                 .andDo(MockMvcResultHandlers.print()).andExpect(status().isOk()).andExpect(content().json(response));
 
     }
+
     @Test
     @DisplayName(" GET v1/anime?name=x findALL returns Empty list when name is not found")
     @Order(3)
     void findAll_ReturnsEmptyList_WhenNameIsNotFound() throws Exception {
         BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);//get-anime-kamui-name-200.json
         String response = readResourceFile("anime/get-anime-x-name-200.json");
-        var name ="x";
+        var name = "x";
         mockMvc.perform(MockMvcRequestBuilders.get("/v1/animes").param("name", name))
                 .andDo(MockMvcResultHandlers.print()).andExpect(status().isOk()).andExpect(content().json(response));
 
     }
+
     @Test
     @DisplayName("GET v1/anime/1 findByid returns a producer with given id")
     @Order(4)
-    void findByid_returnsProducerById_WhenSucceful() throws Exception{
+    void findByid_returnsProducerById_WhenSucceful() throws Exception {
         BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
         String response = readResourceFile("anime/get-anime-by-id-200.json");
-        var id =AnimesList.getFirst().getId();
-        mockMvc.perform(MockMvcRequestBuilders.get("/v1/animes/{id}",id))
+        var id = AnimesList.getFirst().getId();
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/animes/{id}", id))
                 .andDo(MockMvcResultHandlers.print()).andExpect(status().isOk()).andExpect(content().json(response));
 
 
     }
+
     @Test
     @DisplayName("GET v1/anime/99   throws ResponseStatusException 404 when producer is not found")
     @Order(5)
-    void findByid_ThrowsResponseStatusException_WhenProducerIsNotFound () throws Exception {
+    void findByid_ThrowsResponseStatusException_WhenProducerIsNotFound() throws Exception {
         BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
-        var id =99L;
-        mockMvc.perform(MockMvcRequestBuilders.get("/v1/animes/{id}",id))
+        var id = 99L;
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/animes/{id}", id))
                 .andDo(MockMvcResultHandlers.print()).andExpect(status().isNotFound()).andExpect(status().reason("anime not found"));
 
 
     }
+
     @Test
     @DisplayName("POST v1/anime  creates a producer")
     @Order(6)
-    void Save_CreatesProducer_WhenSuccesful() throws Exception{
+    void Save_CreatesProducer_WhenSuccesful() throws Exception {
 
         var request = readResourceFile("anime/post-request-anime-200.json");
 
@@ -153,17 +150,17 @@ class AnimeControllerTest {
         BDDMockito.when(repository.save(ArgumentMatchers.any())).thenReturn(animeToSave);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/v1/animes")
-                        .content(request).header("x-api-key","v1")
+                        .content(request).header("x-api-key", "v1")
                         .contentType(MediaType.APPLICATION_JSON))
-                        .andDo(MockMvcResultHandlers.print())
-                        .andExpect(status().isCreated());
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isCreated());
 
     }
 
     @Test
     @DisplayName(" PUT v1/anime  updates a  producer")
     @Order(7)
-    void update_updatesProducer_WhenSuccesful() throws Exception{
+    void update_updatesProducer_WhenSuccesful() throws Exception {
         var request = readResourceFile("anime/put-request-anime-200.json");
         BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
         mockMvc.perform(MockMvcRequestBuilders.put("/v1/animes").content(request)
@@ -172,10 +169,11 @@ class AnimeControllerTest {
                 .andExpect(status().isNoContent());
 
     }
+
     @Test
     @DisplayName(" PUT v1/anime throws ResponseStatusException when producer is not found")
     @Order(8)
-    void update_ThrowsResponseStatusException_whenProducerIsNotFound()throws Exception {
+    void update_ThrowsResponseStatusException_whenProducerIsNotFound() throws Exception {
         var request = readResourceFile("anime/put-request-anime-404.json");
         BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
         mockMvc.perform(MockMvcRequestBuilders.put("/v1/animes").content(request)
@@ -184,16 +182,15 @@ class AnimeControllerTest {
                 .andExpect(status().isNotFound()).andExpect(MockMvcResultMatchers.status().reason("anime not found"));
 
 
-
-
     }
+
     @Test
     @DisplayName("DELETE v1/anime/1 delete remove a producer")
     @Order(9)
-    void delete_RemoveProducers_whenSuccesful()throws Exception {
+    void delete_RemoveProducers_whenSuccesful() throws Exception {
         BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
-        var id=AnimesList.getFirst().getId();
-        mockMvc.perform(MockMvcRequestBuilders.delete("/v1/animes/{id}",id))
+        var id = AnimesList.getFirst().getId();
+        mockMvc.perform(MockMvcRequestBuilders.delete("/v1/animes/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isNoContent());
 
@@ -204,24 +201,20 @@ class AnimeControllerTest {
     @Test
     @DisplayName("DELETE v1/anime/99 throws ResponseStatusException when producer is not found")
     @Order(10)
-    void delete_ThrowsResponseStatusException_whenProducerIsNotFound()throws Exception {
+    void delete_ThrowsResponseStatusException_whenProducerIsNotFound() throws Exception {
         BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
-        var id=99L;
-        mockMvc.perform(MockMvcRequestBuilders.delete("/v1/animes/{id}",id))
+        var id = 99L;
+        mockMvc.perform(MockMvcRequestBuilders.delete("/v1/animes/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isNotFound()).andExpect(MockMvcResultMatchers.status().reason("anime not found"));
 
     }
 
 
-
-
-
-
     private String readResourceFile(String filename) throws IOException {
 
-        var file= resourceLoader.getResource("classpath:%s".formatted(filename)).getFile();
-        return  new String(Files.readAllBytes(file.toPath()));
+        var file = resourceLoader.getResource("classpath:%s".formatted(filename)).getFile();
+        return new String(Files.readAllBytes(file.toPath()));
     }
 
 

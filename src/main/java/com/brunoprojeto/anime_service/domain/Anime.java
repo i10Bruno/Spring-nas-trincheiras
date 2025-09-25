@@ -6,12 +6,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Builder
 @Getter
 @Setter
+//comparar obj pelos atributos  e não pela memoria
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 
 public class Anime {
