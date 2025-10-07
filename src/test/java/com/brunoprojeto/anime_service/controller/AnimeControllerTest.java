@@ -1,6 +1,7 @@
 package com.brunoprojeto.anime_service.controller;
 
 import com.brunoprojeto.anime_service.commons.AnimeUtils;
+import com.brunoprojeto.anime_service.commons.FileUtils;
 import com.brunoprojeto.anime_service.domain.Anime;
 import com.brunoprojeto.anime_service.mapper.AnimeMapperImpl;
 import com.brunoprojeto.anime_service.repository.AnimeData;
@@ -60,6 +61,9 @@ class AnimeControllerTest {
     private ResourceLoader resourceLoader;
 
     @Autowired
+    private FileUtils fileUtils;
+
+    @Autowired
     private AnimeUtils animeUtils;
 
     private List<Anime> AnimesList;
@@ -70,6 +74,7 @@ class AnimeControllerTest {
 
         AnimesList = animeUtils.newAnimeList();
     }
+
 
     @Test
     @DisplayName("GET v1/anime return a list whith all animes when arguments is null")
@@ -122,7 +127,6 @@ class AnimeControllerTest {
         var id = AnimesList.getFirst().getId();
         mockMvc.perform(MockMvcRequestBuilders.get("/v1/animes/{id}", id))
                 .andDo(MockMvcResultHandlers.print()).andExpect(status().isOk()).andExpect(content().json(response));
-
 
     }
 
