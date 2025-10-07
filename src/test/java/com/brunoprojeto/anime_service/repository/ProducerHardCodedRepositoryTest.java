@@ -1,4 +1,4 @@
-package repository;
+package com.brunoprojeto.anime_service.repository;
 
 import com.brunoprojeto.anime_service.commons.ProducerUtils;
 import com.brunoprojeto.anime_service.domain.Producer;

@@ -1,4 +1,4 @@
-package repository;
+package com.brunoprojeto.anime_service.repository;
 
 import com.brunoprojeto.anime_service.commons.AnimeUtils;
 import com.brunoprojeto.anime_service.domain.Anime;
@@ -77,6 +77,7 @@ public class AnimeHardCodedRepositoryTests {
         //pega o id do obj dessa lista e procura no repository
         var animes = repository.findByName(expected.getName());
 
+
         org.assertj.core.api.Assertions.assertThat(animes).hasSize(1).contains(expected);
 
     }
@@ -115,6 +116,7 @@ public class AnimeHardCodedRepositoryTests {
     void delete_RemoveAnime_WhenSuccesfull() {
         BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
         var expected = AnimesList.getFirst();
+
 
         repository.delete(expected);
 

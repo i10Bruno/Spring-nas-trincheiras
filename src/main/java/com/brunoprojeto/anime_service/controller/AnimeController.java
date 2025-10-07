@@ -34,6 +34,7 @@ public class AnimeController {
 
     }
 
+
     @GetMapping("/{id}")
     public ResponseEntity<AnimeGetResponse> findById(@PathVariable Long id) {
         var anime = Service.findById(id);
@@ -51,6 +52,7 @@ public class AnimeController {
 
 
     @DeleteMapping("/{id}")
+
     public ResponseEntity<Void> deletebyid(@PathVariable Long id) {
         Service.delete(id);
         return ResponseEntity.noContent().build();

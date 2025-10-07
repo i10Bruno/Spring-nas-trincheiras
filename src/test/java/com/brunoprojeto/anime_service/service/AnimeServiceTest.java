@@ -65,15 +65,6 @@ public class AnimeServiceTest {
 
     }
 
-
-
-
-
-
-
-
-
-
     @Test
     @DisplayName("findALL returns Empty list when name is not found")
     @Order(3)

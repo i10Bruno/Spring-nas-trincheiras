@@ -19,6 +19,7 @@ public class AnimeData {
         ANIMES.addAll(List.of(ninjaKamui, kaijuu, kimetsuNoYaiba));
     }
 
+
     public List<Anime> getANIMES() {
         return ANIMES;
     }

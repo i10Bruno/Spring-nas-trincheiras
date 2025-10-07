@@ -20,11 +20,15 @@ public interface AnimeMapper {
 
         //animepostrequest vira anime
     Anime toAnimer(AnimePostRequest animePostRequest);
+
     //anime vira post response
     AnimePostResponse toAnimePostResponse(Anime anime);
+
     //anime vira get response
     AnimeGetResponse toAnimeGetResponse(Anime anime);
+
     //lista de anime vira lista de anime getresponse
     List<AnimeGetResponse> toAnimeGetResponseList(List<Anime> anime);
+
     Anime toAnimer(AnimePutRequest request);
 }

@@ -9,7 +9,7 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-
+//comparar obj pelos atributos  e não pela memoria
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 
 public class Anime {
