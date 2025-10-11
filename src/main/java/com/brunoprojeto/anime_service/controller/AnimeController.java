@@ -6,6 +6,7 @@ import com.brunoprojeto.anime_service.request.AnimePutRequest;
 import com.brunoprojeto.anime_service.response.AnimeGetResponse;
 import com.brunoprojeto.anime_service.response.AnimePostResponse;
 import com.brunoprojeto.anime_service.service.AnimeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -43,7 +44,7 @@ public class AnimeController {
     }
 
     @PostMapping
-    public ResponseEntity<AnimePostResponse> save(@RequestBody AnimePostRequest animePostRequest) {
+    public ResponseEntity<AnimePostResponse> save(@RequestBody @Valid AnimePostRequest animePostRequest) {
         var animes = mapper.toAnimer(animePostRequest);
         var animeSaved = Service.save(animes);
         var response = mapper.toAnimePostResponse(animeSaved);

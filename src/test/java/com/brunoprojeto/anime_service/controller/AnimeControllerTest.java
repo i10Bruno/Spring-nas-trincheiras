@@ -7,6 +7,9 @@ import com.brunoprojeto.anime_service.repository.AnimeData;
 import com.brunoprojeto.anime_service.repository.AnimeHardCodedRepository;
 import com.brunoprojeto.anime_service.service.AnimeService;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +27,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -208,6 +213,51 @@ class AnimeControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isNotFound()).andExpect(MockMvcResultMatchers.status().reason("anime not found"));
 
+    }
+
+    @ParameterizedTest
+    @MethodSource("postAnimeBadRequestSource")
+    @DisplayName("POST v1/anime returns bad request when fields are Invalid")
+    @Order(11)
+    void save_ReturnsBadRequest_WhenFieldsAreInvalid(String filename, List<String> errors) throws Exception {
+
+        var request = readResourceFile("anime/%s".formatted(filename));
+        var mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                        .post("/v1/animes")
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+
+
+        var resolvedException = mvcResult.getResolvedException();
+        org.assertj.core.api.Assertions.assertThat(resolvedException).isNotNull();
+
+
+        org.assertj.core.api.Assertions.assertThat(resolvedException.getMessage())
+                .contains(errors);
+
+
+    }
+
+
+    private static Stream<Arguments> postAnimeBadRequestSource() {
+
+        var allErrors = allRequiredErrors();
+
+
+        return Stream.of(Arguments.of("post-request-anime-blank-fieds-400.json", allErrors),
+                Arguments.of("post-request-anime-empty-fieds-400.json", allErrors));
+
+    }
+
+
+    private static List<String> allRequiredErrors() {
+        var NameError = "The field 'Name' is required";
+
+        return new ArrayList<>(List.of(NameError));
     }
 
 
