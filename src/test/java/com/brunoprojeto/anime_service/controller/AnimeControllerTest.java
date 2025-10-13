@@ -136,9 +136,10 @@ class AnimeControllerTest {
     @Order(5)
     void findByid_ThrowsResponseStatusException_WhenProducerIsNotFound() throws Exception {
         BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
+        String response = readResourceFile("anime/get-anime-by-id-404.json");
         var id = 99L;
         mockMvc.perform(MockMvcRequestBuilders.get("/v1/animes/{id}", id))
-                .andDo(MockMvcResultHandlers.print()).andExpect(status().isNotFound()).andExpect(status().reason("anime not found"));
+                .andDo(MockMvcResultHandlers.print()).andExpect(status().isNotFound()).andExpect(status().isNotFound()).andExpect(content().json(response));
 
 
     }
@@ -178,13 +179,14 @@ class AnimeControllerTest {
     @Test
     @DisplayName(" PUT v1/anime throws ResponseStatusException when producer is not found")
     @Order(8)
-    void update_ThrowsResponseStatusException_whenProducerIsNotFound() throws Exception {
+    void update_ThrowsResponseStatusException_whenAnimeIsNotFound() throws Exception {
+        var response = readResourceFile("anime/put-anime-by-id-404.json");
         var request = readResourceFile("anime/put-request-anime-404.json");
         BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
         mockMvc.perform(MockMvcRequestBuilders.put("/v1/animes").content(request)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(status().isNotFound()).andExpect(MockMvcResultMatchers.status().reason("anime not found"));
+                .andExpect(status().isNotFound()).andExpect(content().json(response));
 
 
     }
@@ -208,11 +210,11 @@ class AnimeControllerTest {
     @Order(10)
     void delete_ThrowsResponseStatusException_whenProducerIsNotFound() throws Exception {
         BDDMockito.when(animeData.getANIMES()).thenReturn(AnimesList);
+        String response = readResourceFile("anime/delete-anime-by-id-404.json");
         var id = 99L;
         mockMvc.perform(MockMvcRequestBuilders.delete("/v1/animes/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(status().isNotFound()).andExpect(MockMvcResultMatchers.status().reason("anime not found"));
-
+                .andExpect(status().isNotFound()).andExpect(content().json(response));
     }
 
     @ParameterizedTest

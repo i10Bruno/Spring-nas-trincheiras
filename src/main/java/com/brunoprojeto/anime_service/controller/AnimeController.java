@@ -1,5 +1,7 @@
 package com.brunoprojeto.anime_service.controller;
 
+import com.brunoprojeto.anime_service.exception.DefaultErrorMessage;
+import com.brunoprojeto.anime_service.exception.NotFoundException;
 import com.brunoprojeto.anime_service.mapper.AnimeMapper;
 import com.brunoprojeto.anime_service.request.AnimePostRequest;
 import com.brunoprojeto.anime_service.request.AnimePutRequest;
@@ -71,6 +73,13 @@ public class AnimeController {
 
 
     }
+
+
+
+
+
+
+
 
 
 }
