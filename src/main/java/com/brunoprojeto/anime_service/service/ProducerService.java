@@ -1,6 +1,7 @@
 package com.brunoprojeto.anime_service.service;
 
 import com.brunoprojeto.anime_service.domain.Producer;
+import com.brunoprojeto.anime_service.exception.NotFoundException;
 import com.brunoprojeto.anime_service.repository.ProducerHardCodedRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,7 @@ public class ProducerService {
     public Producer findById(Long id) {
 
         return repository.findByid(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "producers not found"));
+                .orElseThrow(() -> new NotFoundException("producers not found"));
 
     }
 

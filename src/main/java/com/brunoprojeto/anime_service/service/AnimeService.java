@@ -1,6 +1,7 @@
 package com.brunoprojeto.anime_service.service;
 
 import com.brunoprojeto.anime_service.domain.Anime;
+import com.brunoprojeto.anime_service.exception.NotFoundException;
 import com.brunoprojeto.anime_service.repository.AnimeHardCodedRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class AnimeService {
 
     public Anime findById(Long id) {
         return repository.findByid(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "anime not found"));
+                .orElseThrow(() -> new NotFoundException("anime not found"));
     }
 
 
