@@ -241,6 +241,32 @@ class AnimeControllerTest {
 
 
     }
+    @ParameterizedTest
+    @MethodSource("postAnimeBadRequestSource")
+    @DisplayName("Put v1/anime returns bad request when fields are Invalid")
+    @Order(12)
+    void update_ReturnsBadRequest_WhenFieldsAreInvalid(String filename, List<String> errors) throws Exception {
+
+        var request = readResourceFile("anime/%s".formatted(filename));
+        var mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                        .put("/v1/animes")
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+
+
+        var resolvedException = mvcResult.getResolvedException();
+        org.assertj.core.api.Assertions.assertThat(resolvedException).isNotNull();
+
+
+        org.assertj.core.api.Assertions.assertThat(resolvedException.getMessage())
+                .contains(errors);
+
+
+    }
 
 
     private static Stream<Arguments> postAnimeBadRequestSource() {
@@ -250,6 +276,16 @@ class AnimeControllerTest {
 
         return Stream.of(Arguments.of("post-request-anime-blank-fieds-400.json", allErrors),
                 Arguments.of("post-request-anime-empty-fieds-400.json", allErrors));
+
+    }
+    private static Stream<Arguments> putAnimeBadRequestSource() {
+
+        var allErrors = allRequiredErrors();
+        var idError=allRequiredErrors().add("The field 'id' cannot be nul");
+
+
+        return Stream.of(Arguments.of("put-request-anime-blank-fieds-400.json", allErrors),
+                Arguments.of("put-request-anime-empty-fieds-400.json", allErrors));
 
     }
 

@@ -62,7 +62,7 @@ public class AnimeController {
 
     @PutMapping()
 
-    public ResponseEntity<Void> update(@RequestBody AnimePutRequest request) {
+    public ResponseEntity<Void> update(@RequestBody  @Valid AnimePutRequest request) {
 
         var animeUpdate = mapper.toAnimer(request);
         Service.update(animeUpdate);
