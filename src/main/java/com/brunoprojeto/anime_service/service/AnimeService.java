@@ -5,6 +5,7 @@ import com.brunoprojeto.anime_service.exception.NotFoundException;
 import com.brunoprojeto.anime_service.repository.AnimeHardCodedRepository;
 import com.brunoprojeto.anime_service.repository.AnimeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,8 +18,8 @@ import java.util.List;
 
 public class AnimeService {
     //importando  " o banco de dados " a simulação de um
-    private final AnimeHardCodedRepository repository;
-    private AnimeRepository animeRepository;
+    @Autowired
+    private AnimeRepository repository;
 
     public List<Anime> findAll(String name) {
 
@@ -27,7 +28,7 @@ public class AnimeService {
 
 
     public Anime findById(Long id) {
-        return repository.findByid(id)
+        return repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("anime not found"));
     }
 

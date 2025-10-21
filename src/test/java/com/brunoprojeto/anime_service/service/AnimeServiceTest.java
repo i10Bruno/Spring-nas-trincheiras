@@ -3,6 +3,7 @@ package com.brunoprojeto.anime_service.service;
 import com.brunoprojeto.anime_service.commons.AnimeUtils;
 import com.brunoprojeto.anime_service.domain.Anime;
 import com.brunoprojeto.anime_service.repository.AnimeHardCodedRepository;
+import com.brunoprojeto.anime_service.repository.AnimeRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
@@ -24,8 +25,7 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 public class AnimeServiceTest {
 
     @Mock
-    private AnimeHardCodedRepository repository;
-
+    private AnimeRepository repository;
 
     @InjectMocks
     private AnimeService service;
@@ -84,7 +84,7 @@ public class AnimeServiceTest {
     void findByid_returnsProducerById_WhenSucceful() {
 
         var name = AnimesList.getFirst();
-        BDDMockito.when(repository.findByid(name.getId())).thenReturn(Optional.of(name));
+        BDDMockito.when(repository.findById(name.getId())).thenReturn(Optional.of(name));
         var animesFound = service.findById(name.getId());
         org.assertj.core.api.Assertions.assertThat(animesFound).isEqualTo(name);
 
@@ -96,7 +96,7 @@ public class AnimeServiceTest {
     void findByid_ThrowsResponseStatusException_WhenProducerIsNotFound() {
         var expectedAnime = AnimesList.getFirst();
 
-        BDDMockito.when(repository.findByid(expectedAnime.getId())).thenReturn(Optional.empty());
+        BDDMockito.when(repository.findById(expectedAnime.getId())).thenReturn(Optional.empty());
 
         assertThatException()
                 .isThrownBy(() -> service.findById(expectedAnime.getId()))
@@ -121,7 +121,7 @@ public class AnimeServiceTest {
     @Order(7)
     void delete_RemoveAnime_whenSuccesful() {
         var expectedAnime = AnimesList.getFirst();
-        BDDMockito.when(repository.findByid(expectedAnime.getId())).thenReturn(Optional.of(expectedAnime));
+        BDDMockito.when(repository.findById(expectedAnime.getId())).thenReturn(Optional.of(expectedAnime));
         var animesFound = service.findAll(expectedAnime.getName());
 
         BDDMockito.doNothing().when(repository).delete(expectedAnime);
@@ -134,7 +134,7 @@ public class AnimeServiceTest {
     @Order(8)
     void delete_ThrowsResponseStatusException_whenAnimesIsNotFound() {
         var animeToDelete = AnimesList.getFirst();
-        BDDMockito.when(repository.findByid(animeToDelete.getId())).thenReturn(Optional.empty());
+        BDDMockito.when(repository.findById(animeToDelete.getId())).thenReturn(Optional.empty());
 
 
         assertThatException()
@@ -150,7 +150,7 @@ public class AnimeServiceTest {
 
         var animeToupdate = AnimesList.getFirst();
         animeToupdate.setName("neymar");
-        BDDMockito.when(repository.findByid(animeToupdate.getId())).thenReturn(Optional.of(animeToupdate));
+        BDDMockito.when(repository.findById(animeToupdate.getId())).thenReturn(Optional.of(animeToupdate));
 
 
         assertThatNoException()
@@ -164,7 +164,7 @@ public class AnimeServiceTest {
     @Order(10)
     void update_ThrowsResponseStatusException_whenAnimeIsNotFound() {
         var animeToUP = AnimesList.getFirst();
-        BDDMockito.when(repository.findByid(ArgumentMatchers.anyLong())
+        BDDMockito.when(repository.findById(ArgumentMatchers.anyLong())
         ).thenReturn(Optional.empty());
 
 
