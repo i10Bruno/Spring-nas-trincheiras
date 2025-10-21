@@ -5,6 +5,7 @@ import com.brunoprojeto.anime_service.domain.Anime;
 import com.brunoprojeto.anime_service.mapper.AnimeMapperImpl;
 import com.brunoprojeto.anime_service.repository.AnimeData;
 import com.brunoprojeto.anime_service.repository.AnimeHardCodedRepository;
+import com.brunoprojeto.anime_service.repository.AnimeRepository;
 import com.brunoprojeto.anime_service.service.AnimeService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,6 +13,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -55,6 +57,8 @@ class AnimeControllerTest {
     @MockitoSpyBean
     private AnimeHardCodedRepository repository;
 
+    @Mock
+    private AnimeRepository animeRepository;
 
     @MockitoBean
     //Você precisa programar explicitamente como ele deve se comportar usando o Mockito (ex: when(animeData.getSomething()).thenReturn(...)).

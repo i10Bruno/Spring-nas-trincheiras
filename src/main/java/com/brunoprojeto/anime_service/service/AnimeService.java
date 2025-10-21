@@ -3,6 +3,7 @@ package com.brunoprojeto.anime_service.service;
 import com.brunoprojeto.anime_service.domain.Anime;
 import com.brunoprojeto.anime_service.exception.NotFoundException;
 import com.brunoprojeto.anime_service.repository.AnimeHardCodedRepository;
+import com.brunoprojeto.anime_service.repository.AnimeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.util.List;
 public class AnimeService {
     //importando  " o banco de dados " a simulação de um
     private final AnimeHardCodedRepository repository;
+    private AnimeRepository animeRepository;
 
     public List<Anime> findAll(String name) {
 
