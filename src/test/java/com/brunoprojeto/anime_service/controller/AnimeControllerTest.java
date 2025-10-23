@@ -3,8 +3,6 @@ package com.brunoprojeto.anime_service.controller;
 import com.brunoprojeto.anime_service.commons.AnimeUtils;
 import com.brunoprojeto.anime_service.domain.Anime;
 import com.brunoprojeto.anime_service.mapper.AnimeMapperImpl;
-import com.brunoprojeto.anime_service.repository.AnimeData;
-import com.brunoprojeto.anime_service.repository.AnimeHardCodedRepository;
 import com.brunoprojeto.anime_service.repository.AnimeRepository;
 import com.brunoprojeto.anime_service.service.AnimeService;
 import org.junit.jupiter.api.*;
@@ -13,7 +11,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -21,7 +18,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -45,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 
 // COMO O @WebMvcTest NÃO IMPORTA BEANS DE OUTRAS CLASSES VC DIZ AO SPRING QUE PARA O CONTROLLER FUNCIONAR VC PRECISA DAS CLASSES ABAIXO
-@Import({AnimeMapperImpl.class, AnimeService.class, AnimeHardCodedRepository.class, AnimeData.class})
+@Import({AnimeMapperImpl.class, AnimeService.class})
 @ComponentScan("com.brunoprojeto.anime_service")
 class AnimeControllerTest {
 

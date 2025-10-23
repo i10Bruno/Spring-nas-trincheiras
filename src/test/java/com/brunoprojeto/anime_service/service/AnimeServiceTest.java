@@ -2,7 +2,6 @@ package com.brunoprojeto.anime_service.service;
 
 import com.brunoprojeto.anime_service.commons.AnimeUtils;
 import com.brunoprojeto.anime_service.domain.Anime;
-import com.brunoprojeto.anime_service.repository.AnimeHardCodedRepository;
 import com.brunoprojeto.anime_service.repository.AnimeRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
