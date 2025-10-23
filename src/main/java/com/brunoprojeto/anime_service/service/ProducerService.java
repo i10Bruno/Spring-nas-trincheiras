@@ -2,11 +2,10 @@ package com.brunoprojeto.anime_service.service;
 
 import com.brunoprojeto.anime_service.domain.Producer;
 import com.brunoprojeto.anime_service.exception.NotFoundException;
-import com.brunoprojeto.anime_service.repository.ProducerHardCodedRepository;
+import com.brunoprojeto.anime_service.repository.ProducerRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -17,8 +16,8 @@ import java.util.List;
 
 
 public class ProducerService {
-
-    private final ProducerHardCodedRepository repository;
+    @Autowired
+    private  ProducerRepository repository;
 
 
     public List<Producer> findAll(String name) {
@@ -30,7 +29,7 @@ public class ProducerService {
 
     public Producer findById(Long id) {
 
-        return repository.findByid(id)
+        return repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("producers not found"));
 
     }
@@ -51,8 +50,6 @@ public class ProducerService {
     public void update(Producer producerToUpdate) {
 
         var producer = findById(producerToUpdate.getId());
-
-        producerToUpdate.setCreatedAt(producer.getCreatedAt());
         repository.save(producer);
     }
 

@@ -35,14 +35,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 //diz ao spring para carregar apenas os componentes relacionados a controller não carrega @service,@repository,@component
 //controllers = AnimeController.class Isso torna o teste ainda mais rápido e isolado pois vc epecifica qual controller vc quer
-@WebMvcTest(controllers = AnimeController.class)
+
 
 //ordem de execução dos métodos de teste.
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 
 // COMO O @WebMvcTest NÃO IMPORTA BEANS DE OUTRAS CLASSES VC DIZ AO SPRING QUE PARA O CONTROLLER FUNCIONAR VC PRECISA DAS CLASSES ABAIXO
-@Import({AnimeMapperImpl.class, AnimeService.class})
-@ComponentScan("com.brunoprojeto.anime_service")
+@WebMvcTest(controllers = AnimeController.class)
+@Import({AnimeMapperImpl.class, AnimeService.class, AnimeUtils.class})
 class AnimeControllerTest {
 
 
@@ -51,7 +51,6 @@ class AnimeControllerTest {
     private MockMvc mockMvc;
 
     //Para testar o comportamento real, mas forçar um cenário de erro ou exceção.
-
 
     @MockitoBean
     private AnimeRepository repository;

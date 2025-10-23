@@ -2,7 +2,7 @@ package com.brunoprojeto.anime_service.service;
 
 import com.brunoprojeto.anime_service.commons.ProducerUtils;
 import com.brunoprojeto.anime_service.domain.Producer;
-import com.brunoprojeto.anime_service.repository.ProducerHardCodedRepository;
+import com.brunoprojeto.anime_service.repository.ProducerRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
@@ -27,7 +27,7 @@ class ProducerServiceTest {
     private ProducerService service;
 
     @Mock
-    private ProducerHardCodedRepository repository;
+    private ProducerRepository repository;
 
     @InjectMocks
     private ProducerUtils producerUtils;
@@ -85,7 +85,7 @@ class ProducerServiceTest {
     void findByid_returnsProducerById_WhenSucceful() {
         var expectedProducer = producerList.getFirst();
 
-        BDDMockito.when(repository.findByid(expectedProducer.getId())).thenReturn(Optional.of(expectedProducer));
+        BDDMockito.when(repository.findById(expectedProducer.getId())).thenReturn(Optional.of(expectedProducer));
 
         var producersFound = service.findById(expectedProducer.getId());
         org.assertj.core.api.Assertions.assertThat(producersFound).isEqualTo(expectedProducer);
@@ -98,7 +98,7 @@ class ProducerServiceTest {
     void findByid_ThrowsResponseStatusException_WhenProducerIsNotFound() {
         var expectedProducer = producerList.getFirst();
 
-        BDDMockito.when(repository.findByid(expectedProducer.getId())).thenReturn(Optional.empty());
+        BDDMockito.when(repository.findById(expectedProducer.getId())).thenReturn(Optional.empty());
 
         assertThatException()
                 .isThrownBy(() -> service.findById(expectedProducer.getId()))
@@ -122,7 +122,7 @@ class ProducerServiceTest {
     @Order(7)
     void delete_RemoveProducers_whenSuccesful() {
         var producerToDelete = producerList.getFirst();
-        BDDMockito.when(repository.findByid(producerToDelete.getId())).thenReturn(Optional.of(producerToDelete));
+        BDDMockito.when(repository.findById(producerToDelete.getId())).thenReturn(Optional.of(producerToDelete));
         BDDMockito.doNothing().when(repository).delete(producerToDelete);
         assertThatNoException().isThrownBy(() -> service.delete(producerToDelete.getId()));
 
@@ -133,7 +133,7 @@ class ProducerServiceTest {
     @Order(8)
     void delete_ThrowsResponseStatusException_whenProducerIsNotFound() {
         var producerToDelete = producerList.getFirst();
-        BDDMockito.when(repository.findByid(producerToDelete.getId())).thenReturn(Optional.empty());
+        BDDMockito.when(repository.findById(producerToDelete.getId())).thenReturn(Optional.empty());
 
 
         assertThatException()
@@ -148,7 +148,7 @@ class ProducerServiceTest {
     void update_updatesProducer_WhenSuccesful() {
         var producerToUpdate = producerList.getFirst();
         producerToUpdate.setName("Aniplex");
-        BDDMockito.when(repository.findByid(producerToUpdate.getId())).thenReturn(Optional.of(producerToUpdate));
+        BDDMockito.when(repository.findById(producerToUpdate.getId())).thenReturn(Optional.of(producerToUpdate));
         // BDDMockito.doNothing().when(repository).update(producerToUpdate);
 
         assertThatNoException()
@@ -162,7 +162,7 @@ class ProducerServiceTest {
     @Order(10)
     void update_ThrowsResponseStatusException_whenProducerIsNotFound() {
         var producerToupdate = producerList.getFirst();
-        BDDMockito.when(repository.findByid(ArgumentMatchers.anyLong())
+        BDDMockito.when(repository.findById(ArgumentMatchers.anyLong())
         ).thenReturn(Optional.empty());
 
 
