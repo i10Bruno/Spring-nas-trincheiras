@@ -1,0 +1,41 @@
+{
+  "content": [
+    {
+      "name": "Ninja Kamui",
+      "id": 1
+    },
+    {
+      "name": "Kaijuu-8gou",
+      "id": 2
+    },
+    {
+      "name": "Kimetsu No Yaiba",
+      "id": 3
+    }
+  ],
+  "pageable": {
+    "pageNumber": 0,
+    "pageSize": 3,
+    "sort": {
+      "empty": true,
+      "sorted": false,
+      "unsorted": true
+    },
+    "offset": 0,
+    "paged": true,
+    "unpaged": false
+  },
+  "last": true,
+  "totalPages": 1,
+  "totalElements": 3,
+  "size": 3,
+  "number": 0,
+  "sort": {
+    "empty": true,
+    "sorted": false,
+    "unsorted": true
+  },
+  "first": true,
+  "numberOfElements": 3,
+  "empty": false
+}

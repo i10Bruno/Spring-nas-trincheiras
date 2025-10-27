@@ -12,10 +12,15 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -81,6 +86,23 @@ class AnimeControllerTest {
         String response = readResourceFile("anime/get-anime-null-name-200.json");
         // AQUI COMEÇA A AÇÃO -> .perform() pega a requisição construída por get() e a executa.
         mockMvc.perform(MockMvcRequestBuilders.get("/v1/animes"))
+                // Adicionamos o .andDo(print()) para inspecionar a interação
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk()).
+                andExpect(content().json(response));
+
+
+    }
+    @Test
+    @DisplayName("GET v1/anime/paginated return a  pagitaneted list of animes ")
+    @Order(1)
+    void findAll_ReturnsPaginatedAnimes_WhenSuccesFull() throws Exception {
+        var response = readResourceFile("anime/get-anime-paginated-200.json");
+       var pageRequest= PageRequest.of(0, AnimesList.size());
+       var pageAnime= new PageImpl<Anime>(AnimesList,pageRequest, AnimesList.size());
+        BDDMockito.when(repository.findAll(BDDMockito.any(Pageable.class))).thenReturn(pageAnime);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/animes/paginated"))
                 // Adicionamos o .andDo(print()) para inspecionar a interação
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk()).
